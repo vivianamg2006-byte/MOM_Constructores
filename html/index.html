@@ -3,44 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MOM - Maestro Obra Masís. Encuentra constructores independientes en Costa Rica.">
-    <meta name="keywords" content="constructores, Costa Rica, maestros de obra, construcción, remodelación">
-    <meta name="author" content="MOM">
-    <link rel="stylesheet" href="css/styles.css">
-    <title>MOM | Inicio - Constructores Costa Rica</title>
+    <title>MOM | Constructores Costa Rica</title>
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
     <header class="site-header">
-        <div class="container header-content">
-            <div class="logo">
-                <h1>MOM</h1>
-                <p>Maestro Obra Masís</p>
+        <!-- Barra superior negra solo con registro -->
+        <div class="top-bar">
+            <div class="container">
+                <a href="registro.html">Registra tu construcción</a>
             </div>
+        </div>
 
-            <input type="checkbox" id="menu-toggle" class="menu-toggle">
-            <label for="menu-toggle" class="menu-button">
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
+        <!-- Barra principal con logo y acciones -->
+        <div class="main-header">
+            <div class="container">
+                <div class="logo">
+                    <h1>MOM</h1>
+                    <p>Maestro Obra Masís</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-registro" onclick="window.location.href='registro.html'">Registrar constructor</button>
+                    <div class="perfil" onclick="window.location.href='acerca.html'">
+                        <img src="https://placehold.co/40x40/c0392b/white?text=V" alt="Perfil">
+                        <div>
+                            <span>Viviana Masís</span>
+                            <div class="nivel">Nivel 1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <nav class="main-nav">
+        <!-- Pestañas de navegación -->
+        <div class="nav-tabs">
+            <div class="container">
                 <ul>
                     <li><a href="index.html" class="active">Inicio</a></li>
                     <li><a href="constructores.html">Constructores</a></li>
                     <li><a href="registro.html">Registro</a></li>
                     <li><a href="acerca.html">Acerca de</a></li>
                 </ul>
-            </nav>
+            </div>
         </div>
     </header>
-
-    <nav class="breadcrumb" aria-label="Ubicación actual">
-        <div class="container">
-            <a href="index.html">Inicio</a>
-            <span>Inicio</span>
-        </div>
-    </nav>
 
     <main>
         <section class="hero">
@@ -50,21 +56,19 @@
                     <h1>Encuentra al constructor ideal para tu proyecto</h1>
                     <p>Más de 50 constructores independientes en Costa Rica te esperan. Compara presupuestos, revisa su trabajo y contacta al profesional ideal.</p>
                     <div class="hero-actions">
-                        <a class="btn-primary" href="constructores.html">Ver constructores →</a>
-                        <a class="btn-link" href="#problema-solucion">Conocer la plataforma</a>
+                        <a href="constructores.html" class="btn-primary">Ver constructores →</a>
+                        <a href="#problema-solucion" class="btn-link">Conocer la plataforma</a>
                     </div>
-
                     <div class="hero-info">
                         <span class="info-label">Nuevo</span>
                         <p><strong>Próximamente:</strong> sistema de cotizaciones, valoraciones de clientes y más.</p>
-                        <button class="btn-secondary" onclick="window.location.href='registro.html'">Registrar mi construcción</button>
+                        <button class="btn-primary" onclick="window.location.href='registro.html'" style="margin-top: 10px;">Registrar mi construcción</button>
                     </div>
                 </div>
-
-                <figure class="hero-image">
-                    <img src="https://placehold.co/600x400/c0392b/white?text=Construccion+CR" alt="Constructor trabajando en una obra">
+                <div class="hero-image">
+                    <img src="https://placehold.co/500x400/c0392b/white?text=Construccion+CR" alt="Constructor trabajando">
                     <figcaption>Más de 10 años conectando profesionales con clientes.</figcaption>
-                </figure>
+                </div>
             </div>
         </section>
 
@@ -73,12 +77,12 @@
                 <h2>¿Por qué nace MOM?</h2>
                 <div class="problema-solucion-grid">
                     <div class="card-problema">
-                        <h4>⚠️ El problema</h4>
-                        <p>En Costa Rica, muchos constructores independientes (maestros de obra, electricistas, pintores, etc.) no tienen presencia digital. Dependen del "boca a boca" o carteles físicos. Los clientes no pueden comparar trabajos, presupuestos ni contactos fácilmente.</p>
+                        <h4>El problema</h4>
+                        <p>En Costa Rica, muchos constructores independientes (maestros de obra, electricistas, pintores, etc.) no tienen presencia digital. Dependen del "boca a boca" o carteles físicos. Los clientes no pueden comparar fácilmente trabajos anteriores, presupuestos ni datos de contacto.</p>
                     </div>
                     <div class="card-solucion">
-                        <h4>✅ Nuestra solución</h4>
-                        <p>MOM conecta constructores con clientes. Los profesionales muestran su portafolio, presupuestos y contacto. Los clientes buscan, filtran, guardan favoritos y contactan al profesional ideal.</p>
+                        <h4>Nuestra solución</h4>
+                        <p>MOM conecta constructores con clientes. Los profesionales muestran su portafolio, presupuestos y contacto. Los clientes buscan, filtran, guardan favoritos y contactan al profesional ideal. Esto fomenta la economía local, la transparencia y la confianza.</p>
                     </div>
                 </div>
             </div>
@@ -94,31 +98,18 @@
         </section>
     </main>
 
-    <aside>
-        <h4>¿Sabías que?</h4>
-        <p>Más del 70% de los constructores independientes en Costa Rica no tienen sitio web propio. MOM les da visibilidad.</p>
-        <small>Datos basados en estudio del sector construcción 2025.</small>
-    </aside>
-
     <footer>
-        <h5>Contacto</h5>
-        <address>
-            MOM - Maestro Obra Masís<br>
-            Correo: contacto@momcr.com<br>
-            San José, Costa Rica
-        </address>
-
-        <h6>Enlaces rápidos</h6>
-        <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="constructores.html">Constructores</a></li>
-            <li><a href="registro.html">Registro</a></li>
-            <li><a href="acerca.html">Acerca de</a></li>
-        </ul>
-
-        <p><small>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</small></p>
+        <div class="container">
+            <p>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</p>
+            <p>
+                <a href="index.html">Inicio</a> | 
+                <a href="constructores.html">Constructores</a> | 
+                <a href="registro.html">Registro</a> | 
+                <a href="acerca.html">Acerca de</a>
+            </p>
+        </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="../js/main.js"></script>
 </body>
 </html>
