@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Registra tu construcción o solicita ser agregado como constructor.">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>MOM | Registro - Constructores Costa Rica</title>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="logo">
+                <h1>MOM</h1>
+                <p>Maestro Obra Masís</p>
+            </div>
+
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="constructores.html">Constructores</a></li>
+                    <li><a href="registro.html" class="active">Registro</a></li>
+                    <li><a href="acerca.html">Acerca de</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumb" aria-label="Ubicación actual">
+        <div class="container">
+            <a href="index.html">Inicio</a>
+            <span>Registro</span>
+        </div>
+    </nav>
+
+    <main>
+        <section class="formulario-section">
+            <div class="container">
+                <h1>Solicita ser agregado a MOM</h1>
+                <p>Completa el formulario para que tu perfil aparezca en nuestra plataforma.</p>
+                
+                <form id="formulario-constructor" class="formulario-constructor">
+                    <div class="campo-formulario">
+                        <label for="nombre">Nombre completo o empresa *</label>
+                        <input type="text" id="nombre" required>
+                        <div class="mensaje-error" id="error-nombre">El nombre es obligatorio.</div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="especialidad">Especialidad *</label>
+                        <select id="especialidad" required>
+                            <option value="">Seleccione</option>
+                            <option value="Maestro de obra">Maestro de obra</option>
+                            <option value="Electricista">Electricista</option>
+                            <option value="Pintor">Pintor</option>
+                            <option value="Soldador">Soldador</option>
+                            <option value="Fontanero">Fontanero</option>
+                            <option value="Arquitecto">Arquitecto</option>
+                            <option value="Techista">Techista</option>
+                            <option value="Acabados">Acabados</option>
+                            <option value="Jardinero">Jardinero</option>
+                            <option value="Estructuras metálicas">Estructuras metálicas</option>
+                        </select>
+                        <div class="mensaje-error" id="error-especialidad">Selecciona una especialidad.</div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="provincia">Provincia *</label>
+                        <select id="provincia" required>
+                            <option value="">Seleccione</option>
+                            <option value="San José">San José</option>
+                            <option value="Alajuela">Alajuela</option>
+                            <option value="Cartago">Cartago</option>
+                            <option value="Heredia">Heredia</option>
+                            <option value="Guanacaste">Guanacaste</option>
+                            <option value="Puntarenas">Puntarenas</option>
+                            <option value="Limón">Limón</option>
+                        </select>
+                        <div class="mensaje-error" id="error-provincia">Selecciona una provincia.</div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="presupuesto">Presupuesto base (₡) *</label>
+                        <input type="number" id="presupuesto" placeholder="Ej: 250000">
+                        <div class="mensaje-error" id="error-presupuesto">Ingresa un presupuesto válido.</div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="contacto">Teléfono o WhatsApp *</label>
+                        <input type="tel" id="contacto" placeholder="Ej: 8888-1234">
+                        <div class="mensaje-error" id="error-contacto">Ingresa un número de contacto.</div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="descripcion">Descripción de tu trabajo</label>
+                        <textarea id="descripcion" rows="3" placeholder="Cuéntanos sobre tu experiencia..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Enviar solicitud</button>
+                    <div id="mensaje-exito" class="mensaje-exito">¡Solicitud enviada! Te contactaremos pronto.</div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p><small>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</small></p>
+    </footer>
+
+    <script src="js/registro.js"></script>
+</body>
+</html>
