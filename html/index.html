@@ -8,26 +8,25 @@
 </head>
 <body>
     <header class="site-header">
-        <!-- Barra superior negra solo con registro -->
-        <div class="top-bar">
-            <div class="container">
-                <a href="registro.html">Registra tu construcción</a>
-            </div>
-        </div>
-
-        <!-- Barra principal con logo y acciones -->
         <div class="main-header">
             <div class="container">
-                <div class="logo">
-                    <h1>MOM</h1>
-                    <p>Maestro Obra Masís</p>
+                <div class="logo-container">
+                    <div class="logo-img">
+                        <img src="E:\Web\MOM-Constructores\assets\images\logo.jpeg" alt="MOM Logo">
+                    </div>
+                    <div class="logo-text">
+                        <h1>MOM</h1>
+                        <p>Maestro Obra Masís</p>
+                    </div>
                 </div>
+                
                 <div class="header-actions">
-                    <button class="btn-registro" onclick="window.location.href='registro.html'">Registrar constructor</button>
-                    <div class="perfil" onclick="window.location.href='acerca.html'">
+                    <button class="btn-login" id="btnAuth" onclick="openModal('loginModal')">Registrar constructor</button>
+                    
+                    <div class="perfil hidden" id="userProfile" onclick="window.location.href='#'">
                         <img src="https://placehold.co/40x40/c0392b/white?text=V" alt="Perfil">
                         <div>
-                            <span>Viviana Masís</span>
+                            <span id="profileName">Viviana Masís</span>
                             <div class="nivel">Nivel 1</div>
                         </div>
                     </div>
@@ -35,18 +34,56 @@
             </div>
         </div>
 
-        <!-- Pestañas de navegación -->
         <div class="nav-tabs">
             <div class="container">
                 <ul>
                     <li><a href="index.html" class="active">Inicio</a></li>
-                    <li><a href="constructores.html">Constructores</a></li>
-                    <li><a href="registro.html">Registro</a></li>
-                    <li><a href="acerca.html">Acerca de</a></li>
+                    <li><a href="#">Constructores</a></li>
+                    <li><a href="#problema-solucion">Categorías</a></li>
+                    <li><a href="#">Acerca de</a></li>
                 </ul>
             </div>
         </div>
     </header>
+
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+            <h3>Iniciar Sesión / Registro</h3>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginUser">Usuario o Correo</label>
+                    <input type="text" id="loginUser" required placeholder="Ej: viviana_cr">
+                </div>
+                <div class="form-group">
+                    <label for="loginPass">Contraseña</label>
+                    <input type="password" id="loginPass" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-submit">Ingresar como Constructor</button>
+            </form>
+            <div class="modal-footer-links">
+                <a href="#" onclick="switchModal('loginModal', 'forgotModal')">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('forgotModal')">&times;</button>
+            <h3>Restaurar Contraseña</h3>
+            <p class="modal-desc">Introduce tu correo electrónico y te enviaremos las instrucciones para restablecer tu contraseña.</p>
+            <form id="forgotForm" onsubmit="handleRecovery(event)">
+                <div class="form-group">
+                    <label for="recoveryEmail">Correo Electrónico</label>
+                    <input type="email" id="recoveryEmail" required placeholder="correo@ejemplo.com">
+                </div>
+                <button type="submit" class="btn-submit">Enviar enlace de restauración</button>
+            </form>
+            <div class="modal-footer-links">
+                <a href="#" onclick="switchModal('forgotModal', 'loginModal')">Volver</a>
+            </div>
+        </div>
+    </div>
 
     <main>
         <section class="hero">
@@ -54,20 +91,20 @@
                 <div class="hero-text">
                     <span class="hero-badge">Constructores independientes</span>
                     <h1>Encuentra al constructor ideal para tu proyecto</h1>
-                    <p>Más de 50 constructores independientes en Costa Rica te esperan. Compara presupuestos, revisa su trabajo y contacta al profesional ideal.</p>
+                    <p>Encuentra profesionales de la construcción independientes en Costa Rica. Compara presupuestos, revisa su trabajo y contacta al profesional ideal.</p>
                     <div class="hero-actions">
-                        <a href="constructores.html" class="btn-primary">Ver constructores →</a>
+                        <a href="#" class="btn-primary">Ver constructores →</a>
                         <a href="#problema-solucion" class="btn-link">Conocer la plataforma</a>
                     </div>
                     <div class="hero-info">
                         <span class="info-label">Nuevo</span>
                         <p><strong>Próximamente:</strong> sistema de cotizaciones, valoraciones de clientes y más.</p>
-                        <button class="btn-primary" onclick="window.location.href='registro.html'" style="margin-top: 10px;">Registrar mi construcción</button>
+                        <button class="btn-primary" onclick="openModal('loginModal')" style="margin-top: 10px;">Registrarme como constructor</button>
                     </div>
                 </div>
                 <div class="hero-image">
                     <img src="https://placehold.co/500x400/c0392b/white?text=Construccion+CR" alt="Constructor trabajando">
-                    <figcaption>Más de 10 años conectando profesionales con clientes.</figcaption>
+                    <figcaption>Efraín Masís, Maestro de Obras con más de 10 años de experiencia.</figcaption>
                 </div>
             </div>
         </section>
@@ -87,15 +124,6 @@
                 </div>
             </div>
         </section>
-
-        <section class="categorias-dinamicas">
-            <div class="container">
-                <h2>Categorías de servicios</h2>
-                <div class="categorias-grid" id="categorias-container">
-                    <p>Cargando categorías...</p>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer>
@@ -103,9 +131,9 @@
             <p>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</p>
             <p>
                 <a href="index.html">Inicio</a> | 
-                <a href="constructores.html">Constructores</a> | 
-                <a href="registro.html">Registro</a> | 
-                <a href="acerca.html">Acerca de</a>
+                <a href="#">Constructores</a> | 
+                <a href="#problema-solucion">Categorías</a> | 
+                <a href="#">Acerca de</a>
             </p>
         </div>
     </footer>
