@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function cargarConstructores() {
     try {
         const response = await fetch('../data/constructores.json');
+        const response = await fetch('data/constructores.json');
         constructoresOriginales = await response.json();
         mostrarConstructores(constructoresOriginales);
     } catch (error) {
