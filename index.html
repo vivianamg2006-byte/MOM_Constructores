@@ -22,15 +22,20 @@
                 </div>
                 
                 <div class="header-actions">
-                    <button class="btn-login" id="btnAuth" onclick="openModal('loginModal')">Registrar constructor</button>
                     
-                    <div class="perfil hidden" id="userProfile" onclick="window.location.href='#'">
-                        <img src="https://placehold.co/40x40/c0392b/white?text=V" alt="Perfil">
+                    <button class="btn-login hidden" id="btnRegistrarConstructor" onclick="window.location.href='registro.html'">Registrar constructor</button>
+
+                
+                    <div class="perfil hidden" id="userProfile">
+                        <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
                         <div>
-                            <span id="profileName">Viviana Masís</span>
-                            <div class="nivel">Nivel 1</div>
+                            <span id="profileName">Usuario</span>
+                            <div class="nivel" id="profileNivel">Nivel 1</div>
                         </div>
                     </div>
+
+                    <!-- Visible cuando no hay sesión -->
+                    <button class="btn-login" id="btnLogin" onclick="window.location.href='login.html'">Ingresar</button>
                 </div>
             </div>
         </div>
@@ -47,42 +52,13 @@
         </div>
     </header>
 
-    <div id="loginModal" class="modal-overlay">
+    <!--  perfil / cerrar sesión -->
+    <div id="perfilModal" class="modal-overlay">
         <div class="modal-box">
-            <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
-            <h3>Iniciar Sesión / Registro</h3>
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label for="loginUser">Usuario o Correo</label>
-                    <input type="text" id="loginUser" required placeholder="Ej: viviana_cr">
-                </div>
-                <div class="form-group">
-                    <label for="loginPass">Contraseña</label>
-                    <input type="password" id="loginPass" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn-submit">Ingresar como Constructor</button>
-            </form>
-            <div class="modal-footer-links">
-                <a href="#" onclick="switchModal('loginModal', 'forgotModal')">¿Olvidaste tu contraseña?</a>
-            </div>
-        </div>
-    </div>
-
-    <div id="forgotModal" class="modal-overlay">
-        <div class="modal-box">
-            <button class="modal-close" onclick="closeModal('forgotModal')">&times;</button>
-            <h3>Restaurar Contraseña</h3>
-            <p class="modal-desc">Introduce tu correo electrónico y te enviaremos las instrucciones para restablecer tu contraseña.</p>
-            <form id="forgotForm" onsubmit="handleRecovery(event)">
-                <div class="form-group">
-                    <label for="recoveryEmail">Correo Electrónico</label>
-                    <input type="email" id="recoveryEmail" required placeholder="correo@ejemplo.com">
-                </div>
-                <button type="submit" class="btn-submit">Enviar enlace de restauración</button>
-            </form>
-            <div class="modal-footer-links">
-                <a href="#" onclick="switchModal('forgotModal', 'loginModal')">Volver</a>
-            </div>
+            <button class="modal-close" onclick="closeModal('perfilModal')">&times;</button>
+            <h3 id="modal-saludo">Mi perfil</h3>
+            <p class="modal-desc" id="modal-rol-desc"></p>
+            <button class="btn-submit" onclick="cerrarSesion()" style="background:#555;">Cerrar sesión</button>
         </div>
     </div>
 
@@ -139,5 +115,68 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+        /*sesión */
+        (function() {
+            const sesionData = localStorage.getItem('mom_sesion');
+            const btnLogin           = document.getElementById('btnLogin');
+            const btnRegistrarConst  = document.getElementById('btnRegistrarConstructor');
+            const userProfile        = document.getElementById('userProfile');
+            const profileName        = document.getElementById('profileName');
+            const profileImg         = document.getElementById('profileImg');
+            const profileNivel       = document.getElementById('profileNivel');
+
+            if (sesionData) {
+                const sesion = JSON.parse(sesionData);
+
+                // Ocultar botón de login
+                btnLogin.classList.add('hidden');
+
+               
+                userProfile.classList.remove('hidden');
+                profileName.textContent = sesion.nombre;
+                profileNivel.textContent = 'Nivel ' + (sesion.nivel || 1);
+
+               
+                const inicial = sesion.nombre.charAt(0).toUpperCase();
+                profileImg.src = sesion.foto || `https://placehold.co/40x40/c0392b/white?text=${inicial}`;
+                profileImg.alt = sesion.nombre;
+
+                
+                userProfile.onclick = function() {
+                    document.getElementById('modal-saludo').textContent = '¡Hola, ' + sesion.nombre + '!';
+                    document.getElementById('modal-rol-desc').textContent =
+                        sesion.rol === 'constructor'
+                            ? 'Estás registrado como Constructor.'
+                            : 'Estás registrado como Cliente.';
+                    openModal('perfilModal');
+                };
+
+                // Solo constructores ven "Registrar constructor"
+                if (sesion.rol === 'constructor') {
+                    btnRegistrarConst.classList.remove('hidden');
+                }
+
+            } else {
+                btnLogin.classList.remove('hidden');
+                userProfile.classList.add('hidden');
+                btnRegistrarConst.classList.add('hidden');
+            }
+        })();
+
+      
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('mom_sesion');
+            window.location.href = 'login.html';
+        }
+    </script>
 </body>
 </html>
