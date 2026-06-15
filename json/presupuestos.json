@@ -1,0 +1,216 @@
+{
+  "constructorId": 1,
+  "constructorNombre": "Juan Masís",
+  "categorias": [
+    {
+      "id": "ceramica",
+      "nombre": "Cerámica",
+      "icono": "🟫",
+      "items": [
+        {
+          "id": 1,
+          "nombre": "Cerámica Esmaltada",
+          "precio_m2": 8500,
+          "descripcion": "Alto brillo, ideal para interiores (salas, cocinas).",
+          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Ceramica+Esmaltada"
+        },
+        {
+          "id": 2,
+          "nombre": "Cerámica Rústica",
+          "precio_m2": 6500,
+          "descripcion": "Acabado mate antideslizante, perfecta para exteriores y baños.",
+          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Ceramica+Rustica"
+        },
+        {
+          "id": 3,
+          "nombre": "Cerámica Porcelanato",
+          "precio_m2": 12000,
+          "descripcion": "Máxima resistencia y durabilidad, acabado premium.",
+          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Porcelanato"
+        }
+      ]
+    },
+    {
+      "id": "cielo_raso",
+      "nombre": "Cielo Raso",
+      "icono": "⬜",
+      "items": [
+        {
+          "id": 4,
+          "nombre": "Cielo Raso Liso",
+          "precio_m2": 4500,
+          "descripcion": "Acabado liso tradicional, incluye instalación de perimetral.",
+          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Cielo+Raso+Liso"
+        },
+        {
+          "id": 5,
+          "nombre": "Cielo Raso con Diseño",
+          "precio_m2": 6500,
+          "descripcion": "Cielo raso con figuras y molduras decorativas.",
+          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Cielo+Raso+Dise%C3%B1o"
+        }
+      ]
+    },
+    {
+      "id": "repello",
+      "nombre": "Repello",
+      "icono": "🧱",
+      "items": [
+        {
+          "id": 6,
+          "nombre": "Repello de Pared",
+          "precio_m2": 3500,
+          "descripcion": "Repello fino para paredes interiores y exteriores.",
+          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Repello+Pared"
+        },
+        {
+          "id": 7,
+          "nombre": "Repello de Cielo",
+          "precio_m2": 4000,
+          "descripcion": "Repello para cielos, incluye preparación de superficie.",
+          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Repello+Cielo"
+        }
+      ]
+    },
+    {
+      "id": "electricidad",
+      "nombre": "Electricidad",
+      "icono": "⚡",
+      "items": [
+        {
+          "id": 8,
+          "nombre": "Punto Eléctrico",
+          "precio": 15000,
+          "descripcion": "Instalación de punto eléctrico con tubería y cableado.",
+          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Punto+Electrico"
+        },
+        {
+          "id": 9,
+          "nombre": "Punto de Luz",
+          "precio": 12000,
+          "descripcion": "Instalación de punto de luz con apagador y boquilla.",
+          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Punto+Luz"
+        },
+        {
+          "id": 10,
+          "nombre": "Tablero Eléctrico",
+          "precio": 85000,
+          "descripcion": "Tablero de distribución con breaker principal y salidas.",
+          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Tablero"
+        }
+      ]
+    },
+    {
+      "id": "soldadura",
+      "nombre": "Soldadura",
+      "icono": "🔥",
+      "items": [
+        {
+          "id": 11,
+          "nombre": "Puerta Metálica",
+          "precio": 120000,
+          "descripcion": "Puerta de hierro forjado con diseño personalizado.",
+          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Puerta+Metalica"
+        },
+        {
+          "id": 12,
+          "nombre": "Baranda Metálica",
+          "precio_mL": 35000,
+          "descripcion": "Baranda de hierro para escaleras o balcones (por metro lineal).",
+          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Baranda"
+        },
+        {
+          "id": 13,
+          "nombre": "Portón Corredizo",
+          "precio": 250000,
+          "descripcion": "Portón metálico corredizo con rieles y rodamientos.",
+          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Porton"
+        }
+      ]
+    },
+    {
+      "id": "jardineria",
+      "nombre": "Jardinería",
+      "icono": "🌿",
+      "items": [
+        {
+          "id": 14,
+          "nombre": "Diseño de Jardín",
+          "precio_m2": 5500,
+          "descripcion": "Diseño y siembra de jardín con plantas ornamentales.",
+          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Diseno+Jardin"
+        },
+        {
+          "id": 15,
+          "nombre": "Césped Sintético",
+          "precio_m2": 8000,
+          "descripcion": "Instalación de césped sintético con base preparada.",
+          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Cesped"
+        },
+        {
+          "id": 16,
+          "nombre": "Sistema de Riego",
+          "precio": 45000,
+          "descripcion": "Instalación de sistema de riego automático por aspersión.",
+          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Riego"
+        }
+      ]
+    },
+    {
+      "id": "construccion",
+      "nombre": "Construcción",
+      "icono": "🏗️",
+      "items": [
+        {
+          "id": 17,
+          "nombre": "Mampostería",
+          "precio_m2": 18000,
+          "descripcion": "Construcción de paredes de bloque con refuerzo.",
+          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Mamposteria"
+        },
+        {
+          "id": 18,
+          "nombre": "Contrapiso",
+          "precio_m2": 9500,
+          "descripcion": "Contrapiso de concreto con malla electrosoldada.",
+          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Contrapiso"
+        },
+        {
+          "id": 19,
+          "nombre": "Encofrado de Columnas",
+          "precio": 65000,
+          "descripcion": "Encofrado y fundición de columna de concreto armado.",
+          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Columnas"
+        }
+      ]
+    },
+    {
+      "id": "fontaneria",
+      "nombre": "Fontanería",
+      "icono": "🔧",
+      "items": [
+        {
+          "id": 20,
+          "nombre": "Punto de Agua",
+          "precio": 25000,
+          "descripcion": "Instalación de punto de agua fría/caliente con tubería PVC.",
+          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Punto+Agua"
+        },
+        {
+          "id": 21,
+          "nombre": "Punto de Desagüe",
+          "precio": 22000,
+          "descripcion": "Instalación de punto de desagüe con tubería de 4 pulgadas.",
+          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Desague"
+        },
+        {
+          "id": 22,
+          "nombre": "Tubería General",
+          "precio_mL": 12000,
+          "descripcion": "Tubería de PVC para agua potable (por metro lineal).",
+          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Tueria"
+        }
+      ]
+    }
+  ]
+}

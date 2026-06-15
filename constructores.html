@@ -3,10 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOM | Listado de Constructores</title>
+    <title>MOM | Constructores</title>
     <link rel="stylesheet" href="css/styles.css">
-    
+    <style>
+        .constructores-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
 
+        .constructores-header h1 {
+            color: #c0392b;
+            font-size: 1.8rem;
+        }
+
+        .constructores-header p {
+            color: #666;
+        }
+
+        .btn-carrito-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #c0392b;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn-carrito-nav:hover {
+            background-color: #a93226;
+            transform: scale(1.03);
+            color: white;
+        }
+
+        .contador-badge {
+            background-color: #ffd54f;
+            color: #333;
+            border-radius: 50%;
+            padding: 1px 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .constructor-card {
+            display: flex;
+            gap: 25px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .constructor-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(192, 57, 43, 0.12);
+        }
+
+        .constructor-foto {
+            flex-shrink: 0;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #c0392b;
+        }
+
+        .constructor-foto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .constructor-info {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        .constructor-info h3 {
+            color: #c0392b;
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+
+        .constructor-calificacion {
+            color: #f1c40f;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .constructor-calificacion span {
+            color: #888;
+            font-size: 0.85rem;
+            margin-left: 5px;
+        }
+
+        .constructor-desc {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .constructor-detalle {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .constructor-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: #ffebee;
+            color: #c0392b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .constructor-accion {
+            flex: 1;
+            min-width: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .constructor-estado {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .constructor-estado.disponible {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .constructor-estado.ocupado {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .btn-ver-catalogo {
+            display: inline-block;
+            background-color: #c0392b;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-ver-catalogo:hover {
+            background-color: #a93226;
+            transform: scale(1.05);
+            color: white;
+        }
+
+        .no-resultados {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 600px) {
+            .constructor-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .constructor-accion {
+                align-items: center;
+            }
+            .constructor-tags {
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -22,18 +219,27 @@
                         <p>Maestro Obra Masís</p>
                     </div>
                 </div>
-                
                 <div class="header-actions">
-                    <div class="perfil hidden" id="userProfile">
-                        <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
-                        <div>
-                            <span id="profileName">Usuario</span>
-                            <div class="nivel" id="profileNivel">Nivel 1</div>
-                        </div>
-                    </div>
-                    <button class="btn-login" id="btnLogin" onclick="window.location.href='login.html'">Ingresar</button>
-                </div>
-            </div>
+
+    <button class="btn-login" id="btnLogin"
+        onclick="window.location.href='login.html'">
+        Ingresar
+    </button>
+
+    <button class="btn-login" id="btnRegistro"
+        onclick="window.location.href='login.html?tab=registro'">
+        Registrarse
+    </button>
+
+    <div class="perfil hidden" id="userProfile">
+        <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
+        <div>
+            <span id="profileName">Usuario</span>
+            <div class="nivel" id="profileNivel">Nivel 1</div>
+        </div>
+    </div>
+
+</div>
         </div>
 
         <div class="nav-tabs">
@@ -59,65 +265,23 @@
         </div>
     </div>
 
-    <main class="container constructores-main-container">
-        
-        <aside class="sidebar-filters">
-            <h2>Filtros de Búsqueda</h2>
-            
-            <div class="filter-group">
-                <label for="busqueda">Buscar por nombre o especialidad:</label>
-                <input type="text" id="busqueda" placeholder="Ej: Pérez, Electricista...">
-            </div>
-
-            <div class="filter-group">
-                <label for="filtro-provincia">Provincia:</label>
-                <select id="filtro-provincia">
-                    <option value="todas">Todas las provincias</option>
-                    <option value="San José">San José</option>
-                    <option value="Alajuela">Alajuela</option>
-                    <option value="Cartago">Cartago</option>
-                    <option value="Heredia">Heredia</option>
-                    <option value="Guanacaste">Guanacaste</option>
-                    <option value="Puntarenas">Puntarenas</option>
-                    <option value="Limón">Limón</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label for="presupuesto-min">Presupuesto Mínimo (₡):</label>
-                <input type="number" id="presupuesto-min" placeholder="0" min="0">
-            </div>
-
-            <div class="filter-group">
-                <label for="presupuesto-max">Presupuesto Máximo (₡):</label>
-                <input type="number" id="presupuesto-max" placeholder="Ej: 1000000" min="0">
-            </div>
-
-            <div class="favoritos-sidebar-section">
-                <h3>⭐ Mis Favoritos</h3>
-                <div id="favoritos-container">
-                    <p class="no-favs-text">No tienes constructores favoritos guardados.</p>
+    <main>
+        <section class="hero" style="padding:40px 0;">
+            <div class="container">
+                <div class="constructores-header">
+                    <div>
+                        <h1>Constructores</h1>
+                        <p>Encuentra al profesional ideal para tu proyecto</p>
+                    </div>
+                    <a href="carrito.html" class="btn-carrito-nav">
+                        Ver Carrito
+                        <span class="contador-badge" id="contadorCarrito">0</span>
+                    </a>
                 </div>
+                <div id="constructoresLista"></div>
             </div>
-        </aside>
-
-        <section class="constructores-content">
-            <h2>Nuestros Profesionales de la Construcción</h2>
-            <p class="section-description">Encuentra y compara presupuestos base de profesionales independientes en Costa Rica.</p>
-            
-            <div id="constructores-container" class="cards-grid">
-                </div>
         </section>
-
     </main>
-
-    <div id="constructor-modal" class="modal-overlay">
-        <div class="modal-box" style="width: min(90%, 600px); max-height: 85vh; overflow-y: auto;">
-            <button class="modal-close" onclick="closeModal('constructor-modal')">&times;</button>
-            <div id="modal-body-content" style="margin-top: 20px;">
-                </div>
-        </div>
-    </div>
 
     <footer>
         <div class="container">
@@ -125,18 +289,68 @@
             <p>
                 <a href="index.html">Inicio</a> | 
                 <a href="constructores.html">Constructores</a> | 
-                <a href="index.html#problema-solucion">Categorías</a> | 
+                <a href="categorias.html">Categorías</a> | 
                 <a href="acerca.html">Acerca de</a>
             </p>
         </div>
     </footer>
 
-    <script src="js/main.js"></script> <script src="js/constructores.js"></script> <script>
-        /* Pequeña lógica adicional para sincronizar el modal de perfil de forma local si es necesario */
+    <script src="js/main.js"></script>
+    <script src="js/constructores.js"></script>
+
+    <script>
+        (function() {
+            const sesionData = localStorage.getItem('mom_sesion');
+            const btnLogin = document.getElementById('btnLogin');
+            const btnRegistro = document.getElementById('btnRegistro');
+            const userProfile = document.getElementById('userProfile');
+            const profileName = document.getElementById('profileName');
+            const profileImg = document.getElementById('profileImg');
+            const profileNivel = document.getElementById('profileNivel');
+            const tabTarjeta = document.getElementById('tab-tarjeta');
+
+            if (sesionData) {
+                const sesion = JSON.parse(sesionData);
+
+                btnLogin.classList.add('hidden');
+                btnRegistro.classList.add('hidden');
+                userProfile.classList.remove('hidden');
+                profileName.textContent = sesion.nombre;
+                profileNivel.textContent = 'Nivel ' + (sesion.nivel || 1);
+
+                const inicial = sesion.nombre.charAt(0).toUpperCase();
+                profileImg.src = sesion.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
+
+                userProfile.onclick = function() {
+                    document.getElementById('modal-saludo').textContent = '¡Hola, ' + sesion.nombre + '!';
+                    document.getElementById('modal-rol-desc').textContent =
+                        sesion.rol === 'constructor'
+                            ? 'Estás registrado como Constructor.'
+                            : 'Estás registrado como Cliente.';
+                    openModal('perfilModal');
+                };
+
+                if (sesion.rol === 'constructor') {
+                    tabTarjeta.classList.remove('hidden');
+                    tabTarjeta.style.display = 'block';
+                } else {
+                    tabTarjeta.classList.add('hidden');
+                    tabTarjeta.style.display = 'none';
+                }
+            }
+        })();
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
         function closeModal(id) {
             document.getElementById(id).classList.remove('open');
-            // Por compatibilidad con el modal de constructores que usa .modal-active
-            document.getElementById(id).classList.remove('modal-active');
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('mom_sesion');
+            window.location.href = 'login.html';
         }
     </script>
 </body>

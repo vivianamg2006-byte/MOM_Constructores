@@ -459,6 +459,40 @@ body {
     margin-top: 30px;
 }
 
+.categoria-card {
+    background: white;
+    border-radius: 14px;
+    padding: 25px 18px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.categoria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(192, 57, 43, 0.15);
+    border-color: #c0392b;
+}
+
+.categoria-card .cat-icono {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+}
+
+.categoria-card h4 {
+    color: #c0392b;
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
+
+.categoria-card p {
+    font-size: 0.82rem;
+    color: #999;
+    margin: 0;
+}
+
 /* --- FOOTER (PIE DE PÁGINA) --- */
 
 footer {

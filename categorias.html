@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOM | Categorías</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .categorias-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .categorias-header h1 {
+            color: #c0392b;
+            font-size: 1.8rem;
+        }
+
+        .categorias-header p {
+            color: #666;
+        }
+
+        .breadcrumb {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: #c0392b;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb .separator {
+            margin: 0 8px;
+            color: #ccc;
+        }
+
+        .btn-carrito-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #c0392b;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-carrito-nav:hover {
+            background-color: #a93226;
+            transform: scale(1.03);
+            color: white;
+        }
+
+        .contador-badge {
+            background-color: #ffd54f;
+            color: #333;
+            border-radius: 50%;
+            padding: 1px 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .categorias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 18px;
+            margin-top: 25px;
+            margin-bottom: 40px;
+        }
+
+        .categoria-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+            padding: 25px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .categoria-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(192, 57, 43, 0.15);
+            border-color: #c0392b;
+        }
+
+        .categoria-icono {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .categoria-nombre {
+            font-weight: bold;
+            color: #c0392b;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .categoria-cantidad {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .catalogo-seccion {
+            display: none;
+        }
+
+        .catalogo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn-volver-cat {
+            background: transparent;
+            color: #c0392b;
+            border: 1.5px solid #c0392b;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-volver-cat:hover {
+            background: #c0392b;
+            color: white;
+        }
+
+        .catalogo-titulo {
+            font-size: 1.6rem;
+            color: #c0392b;
+        }
+
+        .catalogo-constructor {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .catalogo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 22px;
+        }
+
+        .catalogo-item {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .catalogo-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(192, 57, 43, 0.12);
+        }
+
+        .catalogo-img {
+            height: 170px;
+            overflow: hidden;
+            background: #f9f9f9;
+        }
+
+        .catalogo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .catalogo-body {
+            padding: 18px;
+        }
+
+        .catalogo-body h3 {
+            color: #c0392b;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .catalogo-body p {
+            color: #777;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .catalogo-precio {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .catalogo-controles {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .catalogo-controles button {
+            width: 34px;
+            height: 34px;
+            border: 1.5px solid #c0392b;
+            background: white;
+            color: #c0392b;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .catalogo-controles button:hover {
+            background: #c0392b;
+            color: white;
+        }
+
+        .catalogo-controles .input-metros {
+            width: 65px;
+            text-align: center;
+            padding: 5px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .catalogo-controles .input-metros:focus {
+            border-color: #c0392b;
+        }
+
+        .catalogo-controles .m2-label {
+            font-size: 0.8rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .btn-agregar {
+            width: 100%;
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-agregar:hover {
+            background-color: #a93226;
+            transform: scale(1.02);
+        }
+
+        .toast-confirmacion {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #2e7d32;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast-confirmacion.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .no-resultados {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        @media (max-width: 480px) {
+            .categorias-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .catalogo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="main-header">
+            <div class="container">
+                <div class="logo-container">
+                    <div class="logo-img">
+                        <img src="assets/images/logo.jpeg" alt="MOM Logo">
+                    </div>
+                    <div class="logo-text">
+                        <h1>MOM</h1>
+                        <p>Maestro Obra Masís</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+
+    <button class="btn-login" id="btnLogin"
+        onclick="window.location.href='login.html'">
+        Ingresar
+    </button>
+
+    <button class="btn-login" id="btnRegistro"
+        onclick="window.location.href='login.html?tab=registro'">
+        Registrarse
+    </button>
+
+    <div class="perfil hidden" id="userProfile">
+        <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
+        <div>
+            <span id="profileName">Usuario</span>
+            <div class="nivel" id="profileNivel">Nivel 1</div>
+        </div>
+    </div>
+
+</div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="constructores.html">Constructores</a></li>
+                    <li id="tab-tarjeta" class="hidden"><a href="tarjeta.html">Tarjeta MOM</a></li>
+                    <li><a href="categorias.html" class="active">Categorías</a></li>
+                    <li><a href="carrito.html">Carrito de presupuestos</a></li>
+                    <li><a href="acerca.html">Acerca de</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div id="perfilModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('perfilModal')">&times;</button>
+            <h3 id="modal-saludo">Mi perfil</h3>
+            <p class="modal-desc" id="modal-rol-desc"></p>
+            <button class="btn-submit" onclick="cerrarSesion()" style="background:#555;">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <main>
+        <section class="hero" style="padding:40px 0;">
+            <div class="container">
+
+                <div class="categorias-header">
+                    <div>
+                        <h1>Categorías</h1>
+                        <p>Catálogo de servicios de <strong id="catalogoConstructor">Juan Masís</strong></p>
+                    </div>
+                    <a href="carrito.html" class="btn-carrito-nav">
+                        Ver Carrito
+                        <span class="contador-badge" id="contadorCarrito">0</span>
+                    </a>
+                </div>
+
+                <div class="breadcrumb">
+                    <a href="constructores.html">Constructores</a>
+                    <span class="separator">›</span>
+                    <span id="breadcrumbCategoria">Categorías</span>
+                </div>
+
+                <div id="categoriasGrilla" class="categorias-grid"></div>
+
+                <div id="catalogoSeccion" class="catalogo-seccion">
+                    <div class="catalogo-header">
+                        <div>
+                            <button class="btn-volver-cat" onclick="categoriasVolver()">← Volver</button>
+                        </div>
+                        <div class="catalogo-titulo" id="catalogoTitulo"></div>
+                        <div class="catalogo-constructor" id="catalogoConstructorLabel"></div>
+                    </div>
+                    <div id="catalogoItems" class="catalogo-grid"></div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <div class="toast-confirmacion" id="toastConfirmacion"></div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</p>
+            <p>
+                <a href="index.html">Inicio</a> | 
+                <a href="constructores.html">Constructores</a> | 
+                <a href="categorias.html">Categorías</a> | 
+                <a href="acerca.html">Acerca de</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/categorias.js"></script>
+
+    <script>
+        function categoriasVolver() {
+            volverCategorias();
+        }
+
+        (function() {
+            const sesionData = localStorage.getItem('mom_sesion');
+            const btnLogin = document.getElementById('btnLogin');
+            const btnRegistro = document.getElementById('btnRegistro');
+            const userProfile = document.getElementById('userProfile');
+            const profileName = document.getElementById('profileName');
+            const profileImg = document.getElementById('profileImg');
+            const profileNivel = document.getElementById('profileNivel');
+            const tabTarjeta = document.getElementById('tab-tarjeta');
+
+            if (sesionData) {
+                const sesion = JSON.parse(sesionData);
+
+                btnLogin.classList.add('hidden');
+                btnRegistro.classList.add('hidden');
+                userProfile.classList.remove('hidden');
+                profileName.textContent = sesion.nombre;
+                profileNivel.textContent = 'Nivel ' + (sesion.nivel || 1);
+
+                const inicial = sesion.nombre.charAt(0).toUpperCase();
+                profileImg.src = sesion.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
+
+                userProfile.onclick = function() {
+                    document.getElementById('modal-saludo').textContent = '¡Hola, ' + sesion.nombre + '!';
+                    document.getElementById('modal-rol-desc').textContent =
+                        sesion.rol === 'constructor'
+                            ? 'Estás registrado como Constructor.'
+                            : 'Estás registrado como Cliente.';
+                    openModal('perfilModal');
+                };
+
+                if (sesion.rol === 'constructor') {
+                    tabTarjeta.classList.remove('hidden');
+                    tabTarjeta.style.display = 'block';
+                } else {
+                    tabTarjeta.classList.add('hidden');
+                    tabTarjeta.style.display = 'none';
+                }
+            }
+        })();
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('mom_sesion');
+            window.location.href = 'login.html';
+        }
+    </script>
+
+</body>
+</html>

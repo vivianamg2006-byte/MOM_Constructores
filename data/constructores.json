@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "nombre": "Juan Masís",
+    "especialidad": "Maestro de obra",
+    "categoria": "Construccion, Fontaneria, Electricidad, Soldadura, Repello, Cielo Raso, Jardineria, Ceramica",
+    "provincia": "Alajuela",
+    "presupuestoBase": 500000,
+    "estado": "Disponible",
+    "contacto": "8732-4339",
+    "foto": "assets/images/IMG-20260607-WA0035.jpg",
+    "descripcion": "Más de 25 años de experiencia en remodelaciones, construcción de viviendas, instalaciones eléctricas y más.",
+    "experiencia": 25,
+    "calificacion": 4.8
+  }
+]
