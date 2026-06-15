@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOM | Listado de Constructores</title>
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <script>
+        /* CONTROL DE ACCESO PRINCIPAL: Fuerza a que el Login cargue primero si no hay sesión */
+        (function() {
+            const sesionData = localStorage.getItem('mom_sesion');
+            if (!sesionData) {
+                window.location.href = 'login.html';
+            }
+        })();
+    </script>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="main-header">
+            <div class="container">
+                <div class="logo-container">
+                    <div class="logo-img">
+                        <img src="assets/images/logo.jpeg" alt="MOM Logo">
+                    </div>
+                    <div class="logo-text">
+                        <h1>MOM</h1>
+                        <p>Maestro Obra Masís</p>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="perfil hidden" id="userProfile">
+                        <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
+                        <div>
+                            <span id="profileName">Usuario</span>
+                            <div class="nivel" id="profileNivel">Nivel 1</div>
+                        </div>
+                    </div>
+                    <button class="btn-login" id="btnLogin" onclick="window.location.href='login.html'">Ingresar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="constructores.html" class="active">Constructores</a></li>
+                    <li id="tab-tarjeta" class="hidden"><a href="tarjeta.html">Tarjeta MOM</a></li>
+                    <li><a href="categorias.html">Categorías</a></li>
+                    <li><a href="carrito.html">Carrito de presupuestos</a></li>
+                    <li><a href="acerca.html">Acerca de</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div id="perfilModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('perfilModal')">&times;</button>
+            <h3 id="modal-saludo">Mi perfil</h3>
+            <p class="modal-desc" id="modal-rol-desc"></p>
+            <button class="btn-submit" onclick="cerrarSesion()" style="background:#555;">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <main class="container constructores-main-container">
+        
+        <aside class="sidebar-filters">
+            <h2>Filtros de Búsqueda</h2>
+            
+            <div class="filter-group">
+                <label for="busqueda">Buscar por nombre o especialidad:</label>
+                <input type="text" id="busqueda" placeholder="Ej: Pérez, Electricista...">
+            </div>
+
+            <div class="filter-group">
+                <label for="filtro-provincia">Provincia:</label>
+                <select id="filtro-provincia">
+                    <option value="todas">Todas las provincias</option>
+                    <option value="San José">San José</option>
+                    <option value="Alajuela">Alajuela</option>
+                    <option value="Cartago">Cartago</option>
+                    <option value="Heredia">Heredia</option>
+                    <option value="Guanacaste">Guanacaste</option>
+                    <option value="Puntarenas">Puntarenas</option>
+                    <option value="Limón">Limón</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="presupuesto-min">Presupuesto Mínimo (₡):</label>
+                <input type="number" id="presupuesto-min" placeholder="0" min="0">
+            </div>
+
+            <div class="filter-group">
+                <label for="presupuesto-max">Presupuesto Máximo (₡):</label>
+                <input type="number" id="presupuesto-max" placeholder="Ej: 1000000" min="0">
+            </div>
+
+            <div class="favoritos-sidebar-section">
+                <h3>⭐ Mis Favoritos</h3>
+                <div id="favoritos-container">
+                    <p class="no-favs-text">No tienes constructores favoritos guardados.</p>
+                </div>
+            </div>
+        </aside>
+
+        <section class="constructores-content">
+            <h2>Nuestros Profesionales de la Construcción</h2>
+            <p class="section-description">Encuentra y compara presupuestos base de profesionales independientes en Costa Rica.</p>
+            
+            <div id="constructores-container" class="cards-grid">
+                </div>
+        </section>
+
+    </main>
+
+    <div id="constructor-modal" class="modal-overlay">
+        <div class="modal-box" style="width: min(90%, 600px); max-height: 85vh; overflow-y: auto;">
+            <button class="modal-close" onclick="closeModal('constructor-modal')">&times;</button>
+            <div id="modal-body-content" style="margin-top: 20px;">
+                </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</p>
+            <p>
+                <a href="index.html">Inicio</a> | 
+                <a href="constructores.html">Constructores</a> | 
+                <a href="index.html#problema-solucion">Categorías</a> | 
+                <a href="acerca.html">Acerca de</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script> <script src="js/constructores.js"></script> <script>
+        /* Pequeña lógica adicional para sincronizar el modal de perfil de forma local si es necesario */
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+            // Por compatibilidad con el modal de constructores que usa .modal-active
+            document.getElementById(id).classList.remove('modal-active');
+        }
+    </script>
+</body>
+</html>

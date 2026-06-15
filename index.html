@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOM | Constructores Costa Rica</title>
     <link rel="stylesheet" href="css/styles.css">
+    
+    <script>
+        /* CONTROL DE ACCESO PRINCIPAL: Fuerza a que el Login cargue primero si no hay sesión */
+        (function() {
+            const sesionData = localStorage.getItem('mom_sesion');
+            if (!sesionData) {
+                window.location.href = 'login.html';
+            }
+        })();
+    </script>
 </head>
 <body>
     <header class="site-header">
@@ -22,10 +32,6 @@
                 </div>
                 
                 <div class="header-actions">
-                    
-                    <button class="btn-login hidden" id="btnRegistrarConstructor" onclick="window.location.href='registro.html'">Registrar constructor</button>
-
-                
                     <div class="perfil hidden" id="userProfile">
                         <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
                         <div>
@@ -42,15 +48,16 @@
             <div class="container">
                 <ul>
                     <li><a href="index.html" class="active">Inicio</a></li>
-                    <li><a href="#">Constructores</a></li>
-                    <li><a href="#problema-solucion">Categorías</a></li>
-                    <li><a href="#">Acerca de</a></li>
+                    <li><a href="constructores.html">Constructores</a></li>
+                    <li id="tab-tarjeta" class="hidden"><a href="tarjeta.html">Tarjeta MOM</a></li>
+                    <li><a href="categorias.html">Categorías</a></li>
+                    <li><a href="carrito.html">Carrito de presupuestos</a></li>
+                    <li><a href="acerca.html">Acerca de</a></li>
                 </ul>
             </div>
         </div>
     </header>
 
-    <!--  perfil / cerrar sesión -->
     <div id="perfilModal" class="modal-overlay">
         <div class="modal-box">
             <button class="modal-close" onclick="closeModal('perfilModal')">&times;</button>
@@ -68,7 +75,7 @@
                     <h1>Encuentra al constructor ideal para tu proyecto</h1>
                     <p>Encuentra profesionales de la construcción independientes en Costa Rica. Compara presupuestos, revisa su trabajo y contacta al profesional ideal.</p>
                     <div class="hero-actions">
-                        <a href="#" class="btn-primary">Ver constructores →</a>
+                        <a href="constructores.html" class="btn-primary">Ver constructores →</a>
                         <a href="#problema-solucion" class="btn-link">Conocer la plataforma</a>
                     </div>
                     <div class="hero-info">
@@ -98,6 +105,13 @@
                 </div>
             </div>
         </section>
+
+        <section class="categorias-dinamicas">
+            <div class="container">
+                <h2>Explora por categorías</h2>
+                <div id="categorias-container" class="categorias-grid"></div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -105,42 +119,39 @@
             <p>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</p>
             <p>
                 <a href="index.html">Inicio</a> | 
-                <a href="#">Constructores</a> | 
+                <a href="constructores.html">Constructores</a> | 
                 <a href="#problema-solucion">Categorías</a> | 
-                <a href="#">Acerca de</a>
+                <a href="acerca.html">Acerca de</a>
             </p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
+    <script src="json/main.js"></script>
+    
     <script>
-        /*sesión */
+        /* Gestión interna exclusiva de la sesión actual de la página */
         (function() {
             const sesionData = localStorage.getItem('mom_sesion');
-            const btnLogin           = document.getElementById('btnLogin');
-            const btnRegistrarConst  = document.getElementById('btnRegistrarConstructor');
-            const userProfile        = document.getElementById('userProfile');
-            const profileName        = document.getElementById('profileName');
-            const profileImg         = document.getElementById('profileImg');
-            const profileNivel       = document.getElementById('profileNivel');
+            const btnLogin = document.getElementById('btnLogin');
+            const userProfile = document.getElementById('userProfile');
+            const profileName = document.getElementById('profileName');
+            const profileImg = document.getElementById('profileImg');
+            const profileNivel = document.getElementById('profileNivel');
+            const tabTarjeta = document.getElementById('tab-tarjeta');
 
             if (sesionData) {
                 const sesion = JSON.parse(sesionData);
 
-                // Ocultar botón de login
                 btnLogin.classList.add('hidden');
-
-               
                 userProfile.classList.remove('hidden');
                 profileName.textContent = sesion.nombre;
                 profileNivel.textContent = 'Nivel ' + (sesion.nivel || 1);
 
-               
                 const inicial = sesion.nombre.charAt(0).toUpperCase();
                 profileImg.src = sesion.foto || `https://placehold.co/40x40/c0392b/white?text=${inicial}`;
                 profileImg.alt = sesion.nombre;
 
-                
                 userProfile.onclick = function() {
                     document.getElementById('modal-saludo').textContent = '¡Hola, ' + sesion.nombre + '!';
                     document.getElementById('modal-rol-desc').textContent =
@@ -150,19 +161,16 @@
                     openModal('perfilModal');
                 };
 
-                // Solo constructores ven "Registrar constructor"
                 if (sesion.rol === 'constructor') {
-                    btnRegistrarConst.classList.remove('hidden');
+                    tabTarjeta.classList.remove('hidden');
+                    tabTarjeta.style.display = 'block';
+                } else {
+                    tabTarjeta.classList.add('hidden');
+                    tabTarjeta.style.display = 'none';
                 }
-
-            } else {
-                btnLogin.classList.remove('hidden');
-                userProfile.classList.add('hidden');
-                btnRegistrarConst.classList.add('hidden');
             }
         })();
 
-      
         function openModal(id) {
             document.getElementById(id).classList.add('open');
         }
