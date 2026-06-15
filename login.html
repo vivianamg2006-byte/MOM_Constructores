@@ -578,6 +578,17 @@
         document.getElementById('forgotModal').addEventListener('click', function(e) {
             if (e.target === this) closeForgot();
         });
+
+        window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('tab') === 'registro') {
+        switchTab('registro');
+    }
+});
+
+
+        
     </script>
 </body>
 </html>
