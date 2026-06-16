@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOM | Acerca de</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* ---- SECCIONES ACERCA DE ---- */
+        .acerca-hero {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+            padding: 60px 0 50px;
+            text-align: center;
+            border-bottom: 3px solid #c0392b;
+        }
+
+        .acerca-hero .hero-badge {
+            background-color: #c0392b;
+            color: white;
+            padding: 5px 18px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 18px;
+        }
+
+        .acerca-hero h1 {
+            font-size: 2.4rem;
+            color: #c0392b;
+            margin-bottom: 16px;
+        }
+
+        .acerca-hero p {
+            font-size: 1.05rem;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ---- SECCIÓN GENÉRICA ---- */
+        .seccion {
+            padding: 60px 0;
+        }
+
+        .seccion-gris {
+            background-color: #f5f5f5;
+        }
+
+        .seccion-blanca {
+            background-color: white;
+        }
+
+        .seccion h2 {
+            font-size: 1.8rem;
+            color: #c0392b;
+            margin-bottom: 10px;
+        }
+
+        .seccion .subtitulo {
+            color: #888;
+            font-size: 0.95rem;
+            margin-bottom: 36px;
+        }
+
+        /* ---- NOMBRE / SIGNIFICADO ---- */
+        .nombre-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            margin-top: 10px;
+        }
+
+        .nombre-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 24px;
+            border-top: 5px solid #c0392b;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+
+        .nombre-card .icono {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .nombre-card h4 {
+            color: #c0392b;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .nombre-card p {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ---- PROBLEMA / SOLUCIÓN ---- */
+        .ps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        .ps-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            border-top: 5px solid #c0392b;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .ps-card h4 {
+            color: #c0392b;
+            font-size: 1.15rem;
+            margin-bottom: 14px;
+        }
+
+        .ps-card p {
+            color: #555;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* ---- USUARIOS AFECTADOS ---- */
+        .usuarios-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .usuario-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .usuario-card .usuario-icon {
+            font-size: 2.2rem;
+            flex-shrink: 0;
+        }
+
+        .usuario-card h4 {
+            color: #c0392b;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .usuario-card p {
+            color: #666;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        /* ---- FUNCIONALIDADES ---- */
+        .funcionalidades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .func-card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease;
+        }
+
+        .func-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .func-card .func-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .func-card h4 {
+            color: #c0392b;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .func-card p {
+            color: #777;
+            font-size: 0.83rem;
+            line-height: 1.5;
+        }
+
+        /* ---- EQUIPO ---- */
+        .equipo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .equipo-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-top: 5px solid #c0392b;
+        }
+
+        .equipo-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background-color: #c0392b;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+        }
+
+        .equipo-card h4 {
+            color: #222;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .equipo-card .rol {
+            color: #c0392b;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .equipo-card p {
+            color: #777;
+            font-size: 0.83rem;
+            line-height: 1.5;
+        }
+
+        /* ---- ORGANIZACIÓN ---- */
+        .org-lista {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .org-lista li {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: white;
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            color: #555;
+            font-size: 0.93rem;
+            line-height: 1.6;
+        }
+
+        .org-lista li .org-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* ---- OBJETIVO BANNER ---- */
+        .objetivo-banner {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            border-radius: 18px;
+            padding: 40px 36px;
+            text-align: center;
+            color: white;
+        }
+
+        .objetivo-banner h3 {
+            font-size: 1.5rem;
+            margin-bottom: 14px;
+        }
+
+        .objetivo-banner p {
+            font-size: 1rem;
+            line-height: 1.7;
+            opacity: 0.92;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 768px) {
+            .nombre-grid { grid-template-columns: 1fr; }
+            .ps-grid { grid-template-columns: 1fr; }
+            .usuarios-grid { grid-template-columns: 1fr; }
+            .equipo-grid { grid-template-columns: 1fr; max-width: 340px; }
+            .acerca-hero h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="main-header">
+            <div class="container">
+                <div class="logo-container">
+                    <div class="logo-img">
+                        <img src="assets/images/logo.jpeg" alt="MOM Logo">
+                    </div>
+                    <div class="logo-text">
+                        <h1>MOM</h1>
+                        <p>Maestro Obra Masís</p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn-login hidden" id="btnRegistrarConstructor" onclick="window.location.href='registro.html'">Registrar constructor</button>
+                    <div class="perfil hidden" id="userProfile">
+                        <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
+                        <div>
+                            <span id="profileName">Usuario</span>
+                            <div class="nivel" id="profileNivel">Nivel 1</div>
+                        </div>
+                    </div>
+                    <button class="btn-login" id="btnLogin" onclick="window.location.href='login.html'">Ingresar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="constructores.html">Constructores</a></li>
+                    <li><a href="categorias.html">Categorías</a></li>
+                    <li><a href="acerca.html" class="active">Acerca de</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Modal perfil -->
+    <div id="perfilModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('perfilModal')">&times;</button>
+            <h3 id="modal-saludo">Mi perfil</h3>
+            <p class="modal-desc" id="modal-rol-desc"></p>
+            <button class="btn-submit" onclick="cerrarSesion()" style="background:#555;">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- HERO -->
+        <section class="acerca-hero">
+            <div class="container">
+                <h1>Acerca de MOM</h1>
+                <p>MOM nació de una necesidad real: darle visibilidad digital a los constructores independientes de Costa Rica y conectarlos con quienes los necesitan.</p>
+            </div>
+        </section>
+
+        <!-- NOMBRE Y SIGNIFICADO -->
+        <section class="seccion seccion-gris">
+            <div class="container">
+                <h2>¿Qué significa MOM?</h2>
+                <p class="subtitulo">Maestro Obra Masís — un nombre con raíces reales.</p>
+                <div class="nombre-grid">
+                    <div class="nombre-card">
+                        <div class="icono">🏗️</div>
+                        <h4>Relación con el problema</h4>
+                        <p>El nombre representa a los constructores independientes que, en muchos casos, no cuentan con los medios para promocionarse digitalmente. A través de la plataforma, pueden darse a conocer.</p>
+                    </div>
+                    <div class="nombre-card">
+                        <div class="icono">👷</div>
+                        <h4>Qué representa</h4>
+                        <p>Representa tanto a un constructor individual como a una comunidad de profesionales de la construcción en Costa Rica que buscan visibilidad y oportunidades.</p>
+                    </div>
+                    <div class="nombre-card">
+                        <div class="icono">💡</div>
+                        <h4>Por qué este nombre</h4>
+                        <p>El apellido "Masís" hace referencia a Juan Masís, figura real que inspira el proyecto, conectando directamente el nombre con la solución propuesta.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROBLEMA Y SOLUCIÓN -->
+        <section class="seccion seccion-blanca">
+            <div class="container">
+                <h2>El problema y nuestra solución</h2>
+                <p class="subtitulo">¿Por qué existe MOM?</p>
+                <div class="ps-grid">
+                    <div class="ps-card">
+                        <h4> El problema</h4>
+                        <p>En Costa Rica, muchos constructores independientes (maestros de obra, electricistas, pintores, soldadores, entre otros) no tienen presencia digital. Dependen de recomendaciones orales, carteles físicos o el famoso "boca a boca".</p>
+                        <br>
+                        <p>Los clientes no pueden comparar trabajos anteriores, presupuestos ni datos de contacto de forma rápida y confiable. La información está dispersa, desactualizada o simplemente no existe en el entorno digital.</p>
+                    </div>
+                    <div class="ps-card">
+                        <h4>Nuestra solución</h4>
+                        <p>MOM es una plataforma web donde constructores independientes muestran su perfil, fotos de trabajos realizados, un presupuesto base y sus datos de contacto.</p>
+                        <br>
+                        <p>Los visitantes pueden ver, filtrar, guardar favoritos y agregar presupuestos a un carrito de comparación. Esto fomenta la economía local, la transparencia y la confianza en el sector de la construcción independiente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- USUARIOS AFECTADOS -->
+        <section class="seccion seccion-gris">
+            <div class="container">
+                <h2>¿A quién ayuda MOM?</h2>
+                <p class="subtitulo">Dos tipos de usuarios, un mismo problema.</p>
+                <div class="usuarios-grid">
+                    <div class="usuario-card">
+                        <div class="usuario-icon">🔨</div>
+                        <div>
+                            <h4>Constructores independientes</h4>
+                            <p>Maestros de obra, electricistas, pintores, soldadores y otros profesionales que pierden oportunidades de trabajo por falta de visibilidad digital. MOM les da una vitrina para mostrar su trabajo.</p>
+                        </div>
+                    </div>
+                    <div class="usuario-card">
+                        <div class="usuario-icon">🏠</div>
+                        <div>
+                            <h4>Clientes y empresas</h4>
+                            <p>Personas o empresas que necesitan construir o remodelar y no encuentran opciones confiables y cercanas. MOM les permite comparar, filtrar y contactar al profesional ideal.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OBJETIVO -->
+        <section class="seccion seccion-blanca">
+            <div class="container">
+                <div class="objetivo-banner">
+                    <h3> Objetivo principal</h3>
+                    <p>Permitir al usuario encontrar fácilmente un constructor independiente en Costa Rica según su especialidad y presupuesto, y al constructor darse a conocer digitalmente sin necesidad de conocimientos técnicos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EQUIPO -->
+        <section class="seccion seccion-blanca">
+            <div class="container">
+                <h2 style="text-align:center;">Desarrollado por</h2>
+                <p class="subtitulo" style="text-align:center;">Estudiantes de Ingeniería del Software, Universidad Técnica Nacional.</p>
+                <div class="equipo-grid">
+                    <div class="equipo-card">
+                        <div class="equipo-avatar">N</div>
+                        <h4>Nadia Gabriela Arauz Mayorga</h4>
+                        <div class="rol">Desarrolladora</div>
+                        <p>Ingeniería del Software · UTN Sede Central · 2026</p>
+                    </div>
+                    <div class="equipo-card">
+                        <div class="equipo-avatar">V</div>
+                        <h4>Viviana Nicole Masís García</h4>
+                        <div class="rol">Desarrolladora</div>
+                        <p>Ingeniería del Software · UTN Sede Central · 2026</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</p>
+            <p>
+                <a href="index.html">Inicio</a> |
+                <a href="constructores.html">Constructores</a> |
+                <a href="categorias.html">Categorías</a> |
+                <a href="acerca.html">Acerca de</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const sesionData = localStorage.getItem('mom_sesion');
+            const btnLogin          = document.getElementById('btnLogin');
+            const btnRegistrarConst = document.getElementById('btnRegistrarConstructor');
+            const userProfile       = document.getElementById('userProfile');
+            const profileName       = document.getElementById('profileName');
+            const profileImg        = document.getElementById('profileImg');
+            const profileNivel      = document.getElementById('profileNivel');
+
+            if (sesionData) {
+                const sesion = JSON.parse(sesionData);
+                btnLogin.classList.add('hidden');
+                userProfile.classList.remove('hidden');
+                profileName.textContent = sesion.nombre;
+                profileNivel.textContent = 'Nivel ' + (sesion.nivel || 1);
+                const inicial = sesion.nombre.charAt(0).toUpperCase();
+                profileImg.src = sesion.foto || `https://placehold.co/40x40/c0392b/white?text=${inicial}`;
+                profileImg.alt = sesion.nombre;
+                userProfile.onclick = function() {
+                    document.getElementById('modal-saludo').textContent = '¡Hola, ' + sesion.nombre + '!';
+                    document.getElementById('modal-rol-desc').textContent =
+                        sesion.rol === 'constructor' ? 'Estás registrado como Constructor.' : 'Estás registrado como Cliente.';
+                    openModal('perfilModal');
+                };
+                if (sesion.rol === 'constructor') btnRegistrarConst.classList.remove('hidden');
+            } else {
+                btnLogin.classList.remove('hidden');
+            }
+        })();
+
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+        function cerrarSesion() { localStorage.removeItem('mom_sesion'); window.location.href = 'login.html'; }
+    </script>
+
+</body>
+</html>
