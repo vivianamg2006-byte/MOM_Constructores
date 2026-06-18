@@ -35,7 +35,7 @@
     let categoriaActiva = null;
 
     async function cargarPresupuestos() {
-        const res = await fetch('json/presupuestos.json');
+        const res = await fetch('data/presupuestos.json');
         return res.json();
     }
 

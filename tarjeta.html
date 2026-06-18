@@ -1,1 +1,777 @@
-nada aún
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOM | Tarjeta MOM</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .tarjeta-header {
+            margin-bottom: 30px;
+        }
+
+        .tarjeta-header h1 {
+            color: #c0392b;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+        }
+
+        .tarjeta-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .tarjeta-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .tarjeta-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tarjeta-form-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 30px;
+        }
+
+        .tarjeta-form-section h2 {
+            color: #c0392b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffebee;
+        }
+
+        .tarjeta-form-section .form-group {
+            margin-bottom: 16px;
+        }
+
+        .tarjeta-form-section .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #444;
+        }
+
+        .tarjeta-form-section .form-group input,
+        .tarjeta-form-section .form-group textarea,
+        .tarjeta-form-section .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .tarjeta-form-section .form-group input:focus,
+        .tarjeta-form-section .form-group textarea:focus,
+        .tarjeta-form-section .form-group select:focus {
+            border-color: #c0392b;
+        }
+
+        .tarjeta-form-section .form-group textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .btn-guardar {
+            width: 100%;
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 6px;
+        }
+
+        .btn-guardar:hover {
+            background-color: #a93226;
+        }
+
+        .btn-guardar:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .tarjeta-preview-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .tarjeta-preview-section h2 {
+            color: #c0392b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffebee;
+        }
+
+        .tarjeta-preview-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #c0392b;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            display: block;
+            background: #f0f0f0;
+        }
+
+        .tarjeta-preview-nombre {
+            font-size: 1.4rem;
+            color: #c0392b;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .tarjeta-preview-especialidad {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .tarjeta-preview-provincia {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .tarjeta-preview-contacto {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+        }
+
+        .tarjeta-preview-desc {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            padding: 0 10px;
+        }
+
+        .tarjeta-preview-estado {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .tarjeta-preview-estado.disponible {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .tarjeta-preview-estado.ocupado {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .tarjeta-preview-rating {
+            margin-bottom: 20px;
+        }
+
+        .tarjeta-preview-rating .estrellas {
+            color: #f1c40f;
+            font-size: 1.4rem;
+        }
+
+        .tarjeta-preview-rating .rating-num {
+            color: #888;
+            font-size: 0.85rem;
+            margin-left: 6px;
+        }
+
+        .tarjeta-preview-social {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .tarjeta-preview-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            transition: transform 0.2s, background 0.2s;
+            text-decoration: none;
+        }
+
+        .tarjeta-preview-social a:hover {
+            transform: scale(1.15);
+        }
+
+        .social-instagram {
+            background: radial-gradient(circle at 30% 30%, #fdf497, #fd5949, #d6249f, #285aeb);
+        }
+
+        .social-facebook {
+            background: #1877f2;
+        }
+
+        .social-whatsapp {
+            background: #25d366;
+        }
+
+        .tarjeta-vacia {
+            color: #aaa;
+            font-size: 0.9rem;
+            padding: 40px 0;
+        }
+
+        .tarjeta-vacia .icono {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .toast-tarjeta {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #2e7d32;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast-tarjeta.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .rating-interactivo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .rating-interactivo label {
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .rating-estrellas {
+            display: flex;
+            gap: 4px;
+        }
+
+        .rating-estrellas button {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.15s, transform 0.15s;
+            padding: 0 2px;
+        }
+
+        .rating-estrellas button.activa {
+            color: #f1c40f;
+        }
+
+        .rating-mensaje {
+            font-size: 0.8rem;
+            color: #999;
+            min-height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .tarjeta-form-section,
+            .tarjeta-preview-section {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tarjeta-form-section .form-group input,
+            .tarjeta-form-section .form-group textarea,
+            .tarjeta-form-section .form-group select {
+                font-size: 0.85rem;
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="main-header">
+            <div class="container">
+                <div class="logo-container">
+                    <div class="logo-img">
+                        <img src="assets/images/logo.jpeg" alt="MOM Logo">
+                    </div>
+                    <div class="logo-text">
+                        <h1>MOM</h1>
+                        <p>Maestro Obra Masís</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+
+    <button class="btn-login" id="btnLogin"
+        onclick="window.location.href='login.html'">
+        Ingresar
+    </button>
+
+    <button class="btn-login" id="btnRegistro"
+        onclick="window.location.href='login.html?tab=registro'">
+        Registrarse
+    </button>
+
+    <div class="perfil hidden" id="userProfile">
+        <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
+        <div>
+            <span id="profileName">Usuario</span>
+            <div class="nivel" id="profileNivel">Nivel 1</div>
+        </div>
+    </div>
+
+</div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="constructores.html">Constructores</a></li>
+                    <li><a href="tarjeta.html" class="active">Tarjeta MOM</a></li>
+                    <li><a href="categorias.html">Categorías</a></li>
+                    <li><a href="carrito.html">Carrito de presupuestos</a></li>
+                    <li><a href="acerca.html">Acerca de</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div id="perfilModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('perfilModal')">&times;</button>
+            <h3 id="modal-saludo">Mi perfil</h3>
+            <p class="modal-desc" id="modal-rol-desc"></p>
+            <button class="btn-submit" onclick="cerrarSesion()" style="background:#555;">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <main>
+        <section class="hero" style="padding:40px 0;">
+            <div class="container">
+                <div class="tarjeta-header">
+                    <h1>Tarjeta MOM</h1>
+                    <p>Completa tus datos para crear tu tarjeta profesional de constructor.</p>
+                </div>
+
+                <div class="tarjeta-layout">
+                    <div class="tarjeta-form-section" id="tarjetaFormSection">
+                        <h2>Datos del constructor</h2>
+                        <div id="tarjetaForm"></div>
+                    </div>
+
+                    <div class="tarjeta-preview-section" id="tarjetaPreviewSection">
+                        <h2>Vista previa</h2>
+                        <div id="tarjetaPreview"></div>
+                    </div>
+                </div>
+
+                <div class="rating-interactivo" id="ratingSection" style="display:none;max-width:600px;margin:30px auto 0;background:white;border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,0.08);padding:24px;">
+                    <label>Califica a este constructor</label>
+                    <div class="rating-estrellas" id="ratingEstrellas"></div>
+                    <div class="rating-mensaje" id="ratingMensaje">Haz clic en una estrella para calificar</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast-tarjeta" id="toastTarjeta"></div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MOM - Maestro Obra Masís. Todos los derechos reservados.</p>
+            <p>
+                <a href="index.html">Inicio</a> | 
+                <a href="constructores.html">Constructores</a> | 
+                <a href="categorias.html">Categorías</a> | 
+                <a href="acerca.html">Acerca de</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('mom_sesion');
+            window.location.href = 'login.html';
+        }
+
+        (function() {
+            const sesionData = localStorage.getItem('mom_sesion');
+            const btnLogin = document.getElementById('btnLogin');
+            const btnRegistro = document.getElementById('btnRegistro');
+            const userProfile = document.getElementById('userProfile');
+            const profileName = document.getElementById('profileName');
+            const profileImg = document.getElementById('profileImg');
+            const profileNivel = document.getElementById('profileNivel');
+
+            if (sesionData) {
+                const sesion = JSON.parse(sesionData);
+
+                btnLogin.classList.add('hidden');
+                btnRegistro.classList.add('hidden');
+                userProfile.classList.remove('hidden');
+                profileName.textContent = sesion.nombre;
+                profileNivel.textContent = 'Nivel ' + (sesion.nivel || 1);
+
+                const inicial = sesion.nombre.charAt(0).toUpperCase();
+                profileImg.src = sesion.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
+
+                userProfile.onclick = function() {
+                    document.getElementById('modal-saludo').textContent = '¡Hola, ' + sesion.nombre + '!';
+                    document.getElementById('modal-rol-desc').textContent =
+                        sesion.rol === 'constructor'
+                            ? 'Estás registrado como Constructor.'
+                            : 'Estás registrado como Cliente.';
+                    openModal('perfilModal');
+                };
+            }
+        })();
+
+        // ---- Tarjeta MOM - Formulario generado por DOM ----
+
+        (function() {
+            const STORAGE_KEY = 'mom_tarjeta';
+
+            function cargarTarjeta() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
+                } catch { return null; }
+            }
+
+            function guardarTarjeta(data) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            }
+
+            function mostrarToast(msg) {
+                const t = document.getElementById('toastTarjeta');
+                t.textContent = msg;
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 3000);
+            }
+
+            function renderizarFormulario() {
+                const contenedor = document.getElementById('tarjetaForm');
+                const datos = cargarTarjeta();
+
+                const form = document.createElement('form');
+                form.id = 'formTarjeta';
+                form.noValidate = true;
+
+                const campos = [
+                    { id: 'nombre', label: 'Nombre completo', type: 'text', placeholder: 'Ej: Juan Masís Calero', required: true },
+                    { id: 'especialidad', label: 'Especialidad', type: 'text', placeholder: 'Ej: Maestro de obra', required: true },
+                    { id: 'provincia', label: 'Provincia', type: 'text', placeholder: 'Ej: Alajuela', required: true },
+                    { id: 'contacto', label: 'Teléfono / contacto', type: 'text', placeholder: 'Ej: 8732-4339', required: true },
+                    { id: 'foto', label: 'Foto de perfil', type: 'file', placeholder: '', required: false },
+                    { id: 'instagram', label: 'Instagram (opcional)', type: 'text', placeholder: '@usuario o url', required: false },
+                    { id: 'facebook', label: 'Facebook (opcional)', type: 'text', placeholder: 'url o usuario', required: false },
+                    { id: 'whatsapp', label: 'WhatsApp (opcional)', type: 'text', placeholder: 'Ej: 8732-4339', required: false },
+                ];
+
+                let fotoDataURL = datos && datos.foto ? datos.foto : null;
+
+                campos.forEach(c => {
+                    const grupo = document.createElement('div');
+                    grupo.className = 'form-group';
+
+                    const label = document.createElement('label');
+                    label.setAttribute('for', c.id);
+                    label.textContent = c.label;
+                    grupo.appendChild(label);
+
+                    if (c.id === 'descripcion') {
+                        const input = document.createElement('textarea');
+                        input.id = c.id;
+                        input.placeholder = c.placeholder || '';
+                        if (c.required) input.required = true;
+                        if (datos && datos[c.id]) input.value = datos[c.id];
+                        grupo.appendChild(input);
+                    } else if (c.type === 'file') {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.id = c.id;
+                        input.accept = 'image/*';
+                        if (datos && datos.foto) {
+                            const label = document.createElement('span');
+                            label.className = 'file-label';
+                            label.textContent = ' (imagen cargada)';
+                            label.style.cssText = 'font-size:0.8rem;color:#2e7d32;font-weight:600;margin-left:6px;';
+                            grupo.appendChild(label);
+                        }
+                        input.addEventListener('change', function(e) {
+                            const file = e.target.files[0];
+                            if (!file) return;
+                            const reader = new FileReader();
+                            reader.onload = function(ev) {
+                                fotoDataURL = ev.target.result;
+                                const existing = grupo.querySelector('.file-label');
+                                if (!existing) {
+                                    const lbl = document.createElement('span');
+                                    lbl.className = 'file-label';
+                                    lbl.textContent = ' (imagen cargada)';
+                                    lbl.style.cssText = 'font-size:0.8rem;color:#2e7d32;font-weight:600;margin-left:6px;';
+                                    grupo.appendChild(lbl);
+                                }
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                        grupo.appendChild(input);
+                    } else {
+                        const input = document.createElement('input');
+                        input.type = c.type;
+                        input.id = c.id;
+                        input.placeholder = c.placeholder || '';
+                        if (c.required) input.required = true;
+                        if (datos && datos[c.id]) input.value = datos[c.id];
+                        grupo.appendChild(input);
+                    }
+
+                    form.appendChild(grupo);
+                });
+
+                const grupoDesc = document.createElement('div');
+                grupoDesc.className = 'form-group';
+                const labelDesc = document.createElement('label');
+                labelDesc.setAttribute('for', 'descripcion');
+                labelDesc.textContent = 'Descripción profesional';
+                grupoDesc.appendChild(labelDesc);
+                const textarea = document.createElement('textarea');
+                textarea.id = 'descripcion';
+                textarea.placeholder = 'Ej: Más de 25 años de experiencia en remodelaciones...';
+                textarea.required = true;
+                if (datos && datos.descripcion) textarea.value = datos.descripcion;
+                grupoDesc.appendChild(textarea);
+                form.appendChild(grupoDesc);
+
+                const grupoEstado = document.createElement('div');
+                grupoEstado.className = 'form-group';
+                const labelEstado = document.createElement('label');
+                labelEstado.setAttribute('for', 'estado');
+                labelEstado.textContent = 'Estado';
+                grupoEstado.appendChild(labelEstado);
+                const select = document.createElement('select');
+                select.id = 'estado';
+                const op1 = document.createElement('option');
+                op1.value = 'Disponible';
+                op1.textContent = 'Disponible';
+                const op2 = document.createElement('option');
+                op2.value = 'Ocupado';
+                op2.textContent = 'Ocupado';
+                select.appendChild(op1);
+                select.appendChild(op2);
+                if (datos && datos.estado) select.value = datos.estado;
+                grupoEstado.appendChild(select);
+                form.appendChild(grupoEstado);
+
+                const btn = document.createElement('button');
+                btn.type = 'submit';
+                btn.className = 'btn-guardar';
+                btn.textContent = datos ? 'Actualizar tarjeta' : 'Crear tarjeta';
+                form.appendChild(btn);
+
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const data = {};
+                    campos.forEach(c => {
+                        if (c.type === 'file') {
+                            data[c.id] = fotoDataURL || (datos ? datos.foto : null) || '';
+                            return;
+                        }
+                        const el = document.getElementById(c.id);
+                        if (el) data[c.id] = el.value.trim();
+                    });
+                    data.descripcion = document.getElementById('descripcion').value.trim();
+                    data.estado = document.getElementById('estado').value;
+
+                    if (!data.nombre || !data.especialidad || !data.provincia || !data.contacto || !data.descripcion) {
+                        mostrarToast('Completa todos los campos obligatorios.');
+                        return;
+                    }
+
+                    guardarTarjeta(data);
+                    renderizarPreview();
+                    mostrarToast('Tarjeta guardada correctamente.');
+                    btn.textContent = 'Actualizar tarjeta';
+
+                    const ratingSection = document.getElementById('ratingSection');
+                    if (ratingSection) ratingSection.style.display = '';
+                });
+
+                contenedor.innerHTML = '';
+                contenedor.appendChild(form);
+            }
+
+            function renderizarPreview() {
+                const contenedor = document.getElementById('tarjetaPreview');
+                const datos = cargarTarjeta();
+
+                if (!datos) {
+                    contenedor.innerHTML = `
+                        <div class="tarjeta-vacia">
+                            <div class="icono">&#128100;</div>
+                            <p>Completa el formulario para ver tu tarjeta.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const inicial = datos.nombre ? datos.nombre.charAt(0).toUpperCase() : '?';
+                const fotoSrc = datos.foto || 'https://placehold.co/150x150/c0392b/white?text=' + inicial;
+                const categoria = datos.especialidad || '';
+
+                contenedor.innerHTML = `
+                    <img src="${fotoSrc}" alt="${datos.nombre}" class="tarjeta-preview-avatar"
+                        onerror="this.src='https://placehold.co/150x150/c0392b/white?text=${inicial}'">
+                    <div class="tarjeta-preview-nombre">${datos.nombre || 'Sin nombre'}</div>
+                    <div class="tarjeta-preview-especialidad">${datos.especialidad || ''}</div>
+                    <div class="tarjeta-preview-provincia">&#128205; ${datos.provincia || ''}</div>
+                    <div class="tarjeta-preview-contacto">&#128222; ${datos.contacto || ''}</div>
+                    <div class="tarjeta-preview-desc">${datos.descripcion || ''}</div>
+                    <div class="tarjeta-preview-estado ${(datos.estado === 'Disponible' ? 'disponible' : 'ocupado')}">${datos.estado || 'Disponible'}</div>
+                    <div class="tarjeta-preview-rating">
+                        <span class="estrellas">☆☆☆☆☆</span>
+                        <span class="rating-num">Sin calificar</span>
+                    </div>
+                    <div class="tarjeta-preview-social">
+                        ${datos.instagram ? `<a href="${datos.instagram.startsWith('http') ? datos.instagram : 'https://instagram.com/' + datos.instagram.replace('@','')}" target="_blank" class="social-instagram" title="Instagram">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                        </a>` : ''}
+                        ${datos.facebook ? `<a href="${datos.facebook.startsWith('http') ? datos.facebook : 'https://facebook.com/' + datos.facebook}" target="_blank" class="social-facebook" title="Facebook">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>` : ''}
+                        ${datos.whatsapp ? `<a href="https://wa.me/${datos.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" class="social-whatsapp" title="WhatsApp">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                        </a>` : ''}
+                    </div>
+                `;
+
+                actualizarRatingPreview();
+            }
+
+            function actualizarRatingPreview() {
+                const datos = cargarTarjeta();
+                const contenedor = document.querySelector('.tarjeta-preview-rating');
+                if (!contenedor || !datos) return;
+                const r = datos.calificacion || 0;
+                const llenas = '★'.repeat(Math.round(r));
+                const vacias = '☆'.repeat(5 - Math.round(r));
+                contenedor.innerHTML = `
+                    <span class="estrellas">${llenas}${vacias}</span>
+                    <span class="rating-num">${r > 0 ? r.toFixed(1) : 'Sin calificar'}</span>
+                `;
+            }
+
+            // ---- Rating interactivo ----
+            function initRating() {
+                const contenedor = document.getElementById('ratingEstrellas');
+                if (!contenedor) return;
+                contenedor.innerHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    const btn = document.createElement('button');
+                    btn.textContent = '★';
+                    btn.dataset.valor = i;
+                    btn.addEventListener('click', function() {
+                        const datos = cargarTarjeta();
+                        if (!datos) {
+                            document.getElementById('ratingMensaje').textContent = 'Primero crea tu tarjeta.';
+                            return;
+                        }
+                        const val = parseInt(this.dataset.valor);
+                        datos.calificacion = val;
+                        guardarTarjeta(datos);
+                        actualizarRatingPreview();
+                        document.querySelectorAll('#ratingEstrellas button').forEach(b => {
+                            b.classList.toggle('activa', parseInt(b.dataset.valor) <= val);
+                        });
+                        document.getElementById('ratingMensaje').textContent = 'Calificaste con ' + val + ' estrella' + (val > 1 ? 's' : '');
+                    });
+                    btn.addEventListener('mouseenter', function() {
+                        const val = parseInt(this.dataset.valor);
+                        document.querySelectorAll('#ratingEstrellas button').forEach(b => {
+                            b.classList.toggle('activa', parseInt(b.dataset.valor) <= val);
+                        });
+                    });
+                    contenedor.appendChild(btn);
+                }
+
+                contenedor.addEventListener('mouseleave', function() {
+                    const datos = cargarTarjeta();
+                    const r = datos ? (datos.calificacion || 0) : 0;
+                    document.querySelectorAll('#ratingEstrellas button').forEach(b => {
+                        b.classList.toggle('activa', parseInt(b.dataset.valor) <= Math.round(r));
+                    });
+                });
+
+                const datos = cargarTarjeta();
+                const r = datos ? (datos.calificacion || 0) : 0;
+                document.querySelectorAll('#ratingEstrellas button').forEach(b => {
+                    b.classList.toggle('activa', parseInt(b.dataset.valor) <= Math.round(r));
+                });
+            }
+
+            renderizarFormulario();
+            renderizarPreview();
+            const datosIniciales = cargarTarjeta();
+            if (datosIniciales) {
+                const ratingSection = document.getElementById('ratingSection');
+                if (ratingSection) ratingSection.style.display = '';
+            }
+            initRating();
+        })();
+    </script>
+
+</body>
+</html>

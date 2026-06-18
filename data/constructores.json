@@ -1,16 +1,30 @@
 [
   {
     "id": 1,
-    "nombre": "Juan Masís",
+    "nombre": "Juan Masís Calero",
     "especialidad": "Maestro de obra",
     "categoria": "Construccion, Fontaneria, Electricidad, Soldadura, Repello, Cielo Raso, Jardineria, Ceramica",
     "provincia": "Alajuela",
     "presupuestoBase": 500000,
     "estado": "Disponible",
     "contacto": "8732-4339",
-    "foto": "assets/images/IMG-20260607-WA0035.jpg",
+    "foto": "assets/images/juanMasis.jpg",
     "descripcion": "Más de 25 años de experiencia en remodelaciones, construcción de viviendas, instalaciones eléctricas y más.",
     "experiencia": 25,
-    "calificacion": 4.8
+    "calificacion": 0
+  },
+  {
+        "id": 2,
+    "nombre": "Daniel Masís Calero",
+    "especialidad": "Electricista",
+    "categoria": "Electricidad, Soldadura",
+    "provincia": "Guanacaste",
+    "presupuestoBase": 400000,
+    "estado": "Disponible",
+    "contacto": "88978427",
+    "foto": "assets/images/IMG-20260607-WA0035.jpg",
+    "descripcion": "Más de 15 años de experiencia en instalaciones eléctricas y soldador.",
+    "experiencia": 15,
+    "calificacion": 0
   }
 ]

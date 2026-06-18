@@ -106,7 +106,17 @@
             margin-bottom: 8px;
         }
 
-        .constructor-calificacion span {
+        .constructor-calificacion .rating-stars {
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+
+        .constructor-calificacion .rating-stars:hover {
+            transform: scale(1.08);
+        }
+
+        .constructor-calificacion .rating-num {
             color: #888;
             font-size: 0.85rem;
             margin-left: 5px;
@@ -294,7 +304,10 @@
     </button>
 
     <button class="btn-fav-header" id="btnFavoritos" title="Mis favoritos" onclick="abrirFavoritos()">
-        ♥ <span class="fav-badge hidden" id="favBadge">0</span>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        <span class="fav-badge hidden" id="favBadge">0</span>
     </button>
 
     <div class="perfil hidden" id="userProfile">

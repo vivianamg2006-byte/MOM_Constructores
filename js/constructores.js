@@ -37,7 +37,9 @@
 
         lista.forEach(c => {
             const categorias = (c.categoria || '').split(',').map(s => s.trim()).filter(Boolean);
-            const estrellas = '★'.repeat(Math.floor(c.calificacion || 0)) + '☆'.repeat(5 - Math.floor(c.calificacion || 0));
+            const ratingVal = obtenerRatingConstructor(c.id);
+            const estrellasLlenas = '★'.repeat(Math.round(ratingVal));
+            const estrellasVacias = '☆'.repeat(5 - Math.round(ratingVal));
             const fav = esFavorito(c.id);
 
             const div = document.createElement('div');
@@ -48,7 +50,10 @@
                 </div>
                 <div class="constructor-info">
                     <h3>${c.nombre}</h3>
-                    <div class="constructor-calificacion">${estrellas} <span>${c.calificacion || 0}</span></div>
+                    <div class="constructor-calificacion" data-constructor-id="${c.id}">
+                        <span class="rating-stars">${estrellasLlenas}${estrellasVacias}</span>
+                        <span class="rating-num">${ratingVal > 0 ? ratingVal.toFixed(1) : 'Sin calificar'}</span>
+                    </div>
                     <p class="constructor-desc">${c.descripcion || ''}</p>
                     <p class="constructor-detalle"><strong>Especialidad:</strong> ${c.especialidad || ''}</p>
                     <p class="constructor-detalle"><strong>Provincia:</strong> ${c.provincia || ''}</p>
@@ -58,13 +63,17 @@
                     </div>
                 </div>
                 <div class="constructor-accion">
-                    <button class="btn-favorito ${fav ? 'activo' : ''}" data-id="${c.id}" onclick="toggleFavorito(${c.id})">${fav ? '♥' : '♡'}</button>
+                    <button class="btn-favorito ${fav ? 'activo' : ''}" data-id="${c.id}" onclick="toggleFavorito(${c.id})">${fav
+    ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'
+    : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'}</button>
                     <span class="constructor-estado ${(c.estado === 'Disponible' ? 'disponible' : 'ocupado')}">${c.estado || ''}</span>
                     <a href="categorias.html?constructor=${c.id}" class="btn-ver-catalogo">Ver catálogo →</a>
                 </div>
             `;
             contenedor.appendChild(div);
         });
+
+        initRatingEstrellas();
     }
 
     function filtrarPorQuery(query) {
@@ -109,4 +118,97 @@
             }
         }
     });
+
+    function obtenerRatingConstructor(id) {
+        try {
+            const ratings = JSON.parse(localStorage.getItem('mom_ratings') || '{}');
+            return ratings[id] || 0;
+        } catch { return 0; }
+    }
+
+    function guardarRatingConstructor(id, valor) {
+        try {
+            const ratings = JSON.parse(localStorage.getItem('mom_ratings') || '{}');
+            ratings[id] = valor;
+            localStorage.setItem('mom_ratings', JSON.stringify(ratings));
+        } catch {}
+    }
+
+    function initRatingEstrellas() {
+        document.querySelectorAll('.constructor-calificacion').forEach(container => {
+            const id = container.dataset.constructorId;
+            if (!id) return;
+
+            const starsSpan = container.querySelector('.rating-stars');
+            if (!starsSpan) return;
+
+            const ratingVal = obtenerRatingConstructor(id);
+
+            function renderStars(valor) {
+                const llenas = '★'.repeat(Math.round(valor));
+                const vacias = '☆'.repeat(5 - Math.round(valor));
+                starsSpan.textContent = llenas + vacias;
+                const numSpan = container.querySelector('.rating-num');
+                if (numSpan) {
+                    numSpan.textContent = valor > 0 ? valor.toFixed(1) : 'Sin calificar';
+                }
+            }
+
+            starsSpan.style.cursor = 'pointer';
+            starsSpan.title = 'Haz clic para calificar';
+
+            const modal = document.createElement('div');
+            modal.className = 'rating-modal';
+            modal.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:3000;justify-content:center;align-items:center;';
+            modal.innerHTML = `
+                <div style="background:white;padding:28px;border-radius:16px;text-align:center;min-width:260px;box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+                    <h3 style="color:#c0392b;margin-bottom:16px;font-size:1.1rem;">Califica a este constructor</h3>
+                    <div class="rating-select" style="display:flex;gap:6px;justify-content:center;margin-bottom:16px;">
+                        ${[1,2,3,4,5].map(v => `<button data-val="${v}" style="background:none;border:none;font-size:2.2rem;cursor:pointer;color:${v <= Math.round(ratingVal) ? '#f1c40f' : '#ddd'};transition:color 0.15s;padding:0 3px;">★</button>`).join('')}
+                    </div>
+                    <button class="btn-rating-cerrar" style="background:#c0392b;color:white;border:none;padding:8px 24px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:0.9rem;">Cerrar</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            starsSpan.addEventListener('click', function(e) {
+                e.stopPropagation();
+                modal.style.display = 'flex';
+            });
+
+            const selectDiv = modal.querySelector('.rating-select');
+            selectDiv.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const val = parseInt(this.dataset.val);
+                    guardarRatingConstructor(id, val);
+                    renderStars(val);
+                    modal.style.display = 'none';
+                    selectDiv.querySelectorAll('button').forEach(b => {
+                        b.style.color = parseInt(b.dataset.val) <= val ? '#f1c40f' : '#ddd';
+                    });
+                });
+                btn.addEventListener('mouseenter', function() {
+                    const val = parseInt(this.dataset.val);
+                    selectDiv.querySelectorAll('button').forEach(b => {
+                        b.style.color = parseInt(b.dataset.val) <= val ? '#f1c40f' : '#ddd';
+                    });
+                });
+            });
+
+            selectDiv.addEventListener('mouseleave', function() {
+                const current = obtenerRatingConstructor(id);
+                selectDiv.querySelectorAll('button').forEach(b => {
+                    b.style.color = parseInt(b.dataset.val) <= Math.round(current) ? '#f1c40f' : '#ddd';
+                });
+            });
+
+            modal.querySelector('.btn-rating-cerrar').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+        });
+    }
 })();

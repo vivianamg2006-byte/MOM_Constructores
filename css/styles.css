@@ -849,13 +849,13 @@ footer a:hover {
 /* Botón de favorito en la tarjeta */
 .btn-favorito {
     background: none;
-    border: 2px solid #e0e0e0;
+    border: 2px solid #c0392b;
     font-size: 1.3rem;
     width: 38px;
     height: 38px;
     border-radius: 50%;
     cursor: pointer;
-    color: #bbb;
+    color: #c0392b;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -865,13 +865,13 @@ footer a:hover {
     flex-shrink: 0;
 }
 .btn-favorito:hover {
-    border-color: #ff6b6b;
-    color: #ff6b6b;
+    border-color: #a93226;
+    color: #a93226;
     transform: scale(1.1);
 }
 .btn-favorito.activo {
-    border-color: #ff6b6b;
-    color: #ff6b6b;
+    border-color: #a93226;
+    color: #a93226;
     background: #fff5f5;
 }
 
