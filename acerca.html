@@ -320,6 +320,9 @@
                 </div>
 
                 <div class="header-actions">
+                    <button class="btn-fav-header" id="btnFavoritos" title="Mis favoritos" onclick="abrirFavoritos()">
+                        ♥ <span class="fav-badge hidden" id="favBadge">0</span>
+                    </button>
                     <button class="btn-login hidden" id="btnRegistrarConstructor" onclick="window.location.href='registro.html'">Registrar constructor</button>
                     <div class="perfil hidden" id="userProfile">
                         <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
@@ -352,6 +355,15 @@
             <h3 id="modal-saludo">Mi perfil</h3>
             <p class="modal-desc" id="modal-rol-desc"></p>
             <button class="btn-submit" onclick="cerrarSesion()" style="background:#555;">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div id="favoritosModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('favoritosModal')">&times;</button>
+            <h3>Mis Favoritos</h3>
+            <div id="favoritosLista"></div>
+            <p class="fav-vacio" id="favVacio">No tienes favoritos guardados.</p>
         </div>
     </div>
 
@@ -484,6 +496,8 @@
         </div>
     </footer>
 
+    <script src="js/main.js"></script>
+
     <script>
         (function() {
             const sesionData = localStorage.getItem('mom_sesion');
@@ -515,6 +529,10 @@
             }
         })();
 
+        function abrirFavoritos() {
+            if (typeof actualizarModalFavoritos === 'function') actualizarModalFavoritos();
+            openModal('favoritosModal');
+        }
         function openModal(id) { document.getElementById(id).classList.add('open'); }
         function closeModal(id) { document.getElementById(id).classList.remove('open'); }
         function cerrarSesion() { localStorage.removeItem('mom_sesion'); window.location.href = 'login.html'; }

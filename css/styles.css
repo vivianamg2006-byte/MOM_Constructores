@@ -1,16 +1,20 @@
-/* Limpieza rápida de márgenes para que no estorben */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f5f5;
     color: #333;
-    /* Espacio para que el header fijo no tape el contenido del inicio */
-    padding-top: 150px;
+    padding-top: 160px;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 /* --- HEADER PRINCIPAL --- */
@@ -25,9 +29,8 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* La fila de arriba donde va el logo y el botón de registro */
 .main-header {
-    padding: 12px 0 16px 0; 
+    padding: 12px 0 16px 0;
     border-bottom: 1px solid #e74c3c;
 }
 
@@ -39,7 +42,6 @@ body {
     gap: 20px;
 }
 
-/* Alineación del logo con el texto del negocio */
 .logo-container {
     display: flex;
     align-items: center;
@@ -55,7 +57,7 @@ body {
 
 .logo-text h1 {
     color: white;
-    font-size: 2rem;
+    font-size: clamp(1.4rem, 4vw, 2rem);
     line-height: 1;
     margin-bottom: 2px;
 }
@@ -71,7 +73,47 @@ body {
     gap: 15px;
 }
 
-/* Botón principal para los constructores */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.2);
+    border-radius: 25px;
+    padding: 0 4px 0 14px;
+    transition: background 0.3s;
+}
+.search-box:focus-within {
+    background: rgba(255,255,255,0.35);
+}
+.search-box input {
+    background: none;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 0.85rem;
+    padding: 7px 0;
+    min-width: 180px;
+}
+.search-box input::placeholder {
+    color: rgba(255,255,255,0.65);
+}
+.search-box button {
+    background: rgba(255,255,255,0.25);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+    margin-left: 6px;
+}
+.search-box button:hover {
+    background: rgba(255,255,255,0.45);
+}
+
 .btn-login {
     background-color: transparent;
     color: white;
@@ -80,7 +122,9 @@ body {
     border-radius: 25px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .btn-login:hover {
@@ -88,7 +132,69 @@ body {
     color: #c0392b;
 }
 
-/* Perfil (se activa por JS cuando el constructor inicia sesión) */
+/* Botón corazón de favoritos en el header */
+.btn-fav-header {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    cursor: pointer;
+    position: relative;
+    padding: 4px 8px;
+    transition: transform 0.2s;
+    line-height: 1;
+}
+.btn-fav-header:hover {
+    transform: scale(1.15);
+}
+.fav-badge {
+    position: absolute;
+    top: -2px;
+    right: 0;
+    background: #ffd54f;
+    color: #333;
+    font-size: 0.6rem;
+    font-weight: bold;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+}
+
+/* Estilos dentro del modal de favoritos */
+#favoritosLista .favorito-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border-left: 4px solid #ffca28;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+#favoritosLista .favorito-item a.fav-link {
+    font-weight: 600;
+    color: #c0392b;
+    text-decoration: none;
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+}
+#favoritosLista .favorito-item a.fav-link:hover {
+    text-decoration: underline;
+}
+.fav-vacio {
+    color: #999;
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 10px 0;
+    display: none;
+}
+
 .perfil {
     display: flex;
     align-items: center;
@@ -111,12 +217,14 @@ body {
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid rgba(255, 255, 255, 0.5);
+    flex-shrink: 0;
 }
 
 .perfil span {
     color: white;
     font-size: 0.9rem;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .nivel {
@@ -125,7 +233,6 @@ body {
     font-weight: bold;
 }
 
-/* Para ocultar cosas rápido desde JavaScript */
 .hidden {
     display: none !important;
 }
@@ -151,21 +258,20 @@ body {
     font-weight: 600;
     border-radius: 8px 8px 0 0;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .nav-tabs a:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* La pestaña blanca que resalta la página actual */
 .nav-tabs a.active {
     background-color: white;
     color: #c0392b;
 }
 
-/* --- MODALES (LOGIN Y RECUPERACIÓN) --- */
+/* --- MODALES --- */
 
-/* El fondo oscuro transparente */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -182,13 +288,11 @@ body {
     transition: opacity 0.3s ease;
 }
 
-/* Clase que se mete con JS para mostrar el modal */
 .modal-overlay.open {
     opacity: 1;
     pointer-events: auto;
 }
 
-/* La cajita blanca del formulario */
 .modal-box {
     background-color: white;
     padding: 30px;
@@ -198,13 +302,14 @@ body {
     position: relative;
     transform: translateY(-20px);
     transition: transform 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-overlay.open .modal-box {
     transform: translateY(0);
 }
 
-/* La 'X' para cerrar */
 .modal-close {
     position: absolute;
     top: 15px;
@@ -295,15 +400,13 @@ body {
     text-decoration: underline;
 }
 
-/* --- SECCIONES DE LA PÁGINA (HERO, INFO, ETC) --- */
+/* --- SECCIONES DE LA PÁGINA --- */
 
-/* Centrador estándar para que el diseño no se desarme en pantallas enormes */
 .container {
-    width: min(90%, 1200px);
+    width: min(92%, 1200px);
     margin: 0 auto;
 }
 
-/* El bloque de bienvenida arriba */
 .hero {
     background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
     padding: 60px 0;
@@ -319,6 +422,7 @@ body {
 
 .hero-text {
     flex: 1;
+    min-width: 0;
 }
 
 .hero-badge {
@@ -332,13 +436,13 @@ body {
 }
 
 .hero-text h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.6rem, 4.5vw, 2.5rem);
     color: #c0392b;
     margin-bottom: 20px;
 }
 
 .hero-text p {
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
     color: #555;
     margin-bottom: 25px;
 }
@@ -375,7 +479,6 @@ body {
     margin-bottom: 25px;
 }
 
-/* El cuadro de "Próximamente" */
 .hero-info {
     background-color: #ffebee;
     padding: 20px;
@@ -397,6 +500,7 @@ body {
 
 .hero-image {
     flex: 1;
+    min-width: 0;
     background: white;
     padding: 15px;
     border-radius: 16px;
@@ -415,7 +519,6 @@ body {
     margin-top: 10px;
 }
 
-/* Sección de la justificación del proyecto */
 .problema-solucion {
     background-color: white;
     padding: 60px 0;
@@ -437,7 +540,7 @@ body {
 
 .card-problema h4, .card-solucion h4 {
     color: #c0392b;
-    font-size: 1.3rem;
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
     margin-bottom: 15px;
 }
 
@@ -446,7 +549,6 @@ body {
     line-height: 1.6;
 }
 
-/* Aquí se renderizan las categorías desde el script backend */
 .categorias-dinamicas {
     background-color: #f5f5f5;
     padding: 60px 0;
@@ -493,13 +595,13 @@ body {
     margin: 0;
 }
 
-/* --- FOOTER (PIE DE PÁGINA) --- */
+/* --- FOOTER --- */
 
 footer {
     background-color: #1a1a1a;
     color: white;
     text-align: center;
-    padding: 40px 0;
+    padding: 40px 20px;
 }
 
 footer a {
@@ -511,17 +613,23 @@ footer a:hover {
     color: white;
 }
 
-/* --- DISEÑO RESPONSIVO (TABLETS Y CELULARES) --- */
+/* --- DISEÑO RESPONSIVO --- */
+
+@media (max-width: 992px) {
+    .hero-text h1 {
+        font-size: clamp(1.4rem, 3.5vw, 2rem);
+    }
+}
 
 @media (max-width: 768px) {
     body {
-        /* Más espacio arriba porque las cosas se apilan en pantallas pequeñas */
-        padding-top: 210px;
+        padding-top: 190px;
     }
 
     .main-header .container {
         flex-direction: column;
         text-align: center;
+        gap: 10px;
     }
 
     .logo-container {
@@ -529,22 +637,140 @@ footer a:hover {
         gap: 5px;
     }
 
+    .logo-img img {
+        height: 50px;
+    }
+
+    .header-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .search-box input {
+        min-width: 140px;
+    }
+
     .nav-tabs ul {
         justify-content: center;
     }
 
+    .nav-tabs a {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+    }
+
     .hero-content {
         flex-direction: column;
+        gap: 30px;
+    }
+
+    .hero {
+        padding: 40px 0;
+    }
+
+    .hero-image {
+        width: 100%;
+    }
+
+    .problema-solucion {
+        padding: 40px 0;
     }
 
     .problema-solucion-grid {
         grid-template-columns: 1fr;
     }
+
+    .categorias-dinamicas {
+        padding: 40px 0;
+    }
+
+    .categorias-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+    }
+
+    .modal-box {
+        padding: 24px 20px;
+        width: min(95%, 420px);
+    }
+
+    footer {
+        padding: 30px 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding-top: 175px;
+    }
+
+    .logo-img img {
+        height: 45px;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+
+    .search-box input {
+        min-width: 100px;
+        font-size: 0.8rem;
+    }
+
+    .btn-login {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+    }
+
+    .hero {
+        padding: 30px 0;
+    }
+
+    .hero-info {
+        padding: 16px 14px;
+    }
 }
 
 @media (max-width: 480px) {
+    body {
+        padding-top: 165px;
+    }
+
+    .logo-img img {
+        height: 40px;
+    }
+
+    .logo-text h1 {
+        font-size: 1.3rem;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 6px;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+    .search-box input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .btn-login {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-tabs a {
+        padding: 5px 10px;
+        font-size: 0.78rem;
+    }
+
     .hero-text h1 {
-        font-size: 1.8rem;
+        font-size: 1.4rem;
     }
 
     .hero-actions {
@@ -555,14 +781,21 @@ footer a:hover {
         text-align: center;
     }
 
-    .header-actions {
-        flex-direction: column;
-        width: 100%;
+    .hero-info {
+        padding: 14px 12px;
+    }
+    .info-label {
+        right: 10px;
+        font-size: 0.65rem;
     }
 
-    .btn-login {
-        width: 100%;
-        text-align: center;
+    .modal-box {
+        padding: 20px 16px;
+        width: 96%;
+        border-radius: 12px;
+    }
+    .modal-box h3 {
+        font-size: 1.2rem;
     }
 }
 
@@ -606,7 +839,6 @@ footer a:hover {
     border-radius: 4px;
 }
 
-/* Grilla de Tarjetas */
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -614,31 +846,33 @@ footer a:hover {
     margin-top: 20px;
 }
 
-/* Estilos de la sección persistente de favoritos */
-.favoritos-sidebar-section {
-    margin-top: 30px;
-    border-top: 2px dashed #ddd;
-    padding-top: 15px;
-}
-
-.favorito-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    border-left: 4px solid #ffca28;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.btn-eliminar-fav {
+/* Botón de favorito en la tarjeta */
+.btn-favorito {
     background: none;
-    border: none;
-    color: #ff5252;
+    border: 2px solid #e0e0e0;
+    font-size: 1.3rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 16px;
+    color: #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1;
+    align-self: flex-end;
+    flex-shrink: 0;
+}
+.btn-favorito:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+    transform: scale(1.1);
+}
+.btn-favorito.activo {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+    background: #fff5f5;
 }
 
 /* Estilos Básicos para el Modal Emergente */

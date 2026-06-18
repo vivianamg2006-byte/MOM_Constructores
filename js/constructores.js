@@ -13,9 +13,15 @@
         }
     }
 
-    async function cargarConstructores() {
-        const res = await fetch('data/constructores.json');
-        return res.json();
+    function coincide(constructor, query) {
+        const q = query.toLowerCase();
+        return (
+            (constructor.nombre || '').toLowerCase().includes(q) ||
+            (constructor.especialidad || '').toLowerCase().includes(q) ||
+            (constructor.categoria || '').toLowerCase().includes(q) ||
+            (constructor.provincia || '').toLowerCase().includes(q) ||
+            (constructor.descripcion || '').toLowerCase().includes(q)
+        );
     }
 
     function renderizarConstructores(lista) {
@@ -27,9 +33,12 @@
             return;
         }
 
+        contenedor.innerHTML = '';
+
         lista.forEach(c => {
             const categorias = (c.categoria || '').split(',').map(s => s.trim()).filter(Boolean);
             const estrellas = '★'.repeat(Math.floor(c.calificacion || 0)) + '☆'.repeat(5 - Math.floor(c.calificacion || 0));
+            const fav = esFavorito(c.id);
 
             const div = document.createElement('div');
             div.className = 'constructor-card';
@@ -49,6 +58,7 @@
                     </div>
                 </div>
                 <div class="constructor-accion">
+                    <button class="btn-favorito ${fav ? 'activo' : ''}" data-id="${c.id}" onclick="toggleFavorito(${c.id})">${fav ? '♥' : '♡'}</button>
                     <span class="constructor-estado ${(c.estado === 'Disponible' ? 'disponible' : 'ocupado')}">${c.estado || ''}</span>
                     <a href="categorias.html?constructor=${c.id}" class="btn-ver-catalogo">Ver catálogo →</a>
                 </div>
@@ -57,10 +67,40 @@
         });
     }
 
+    function filtrarPorQuery(query) {
+        if (!query) {
+            renderizarConstructores(todosLosConstructores);
+            return;
+        }
+        const filtrados = todosLosConstructores.filter(c => coincide(c, query));
+        renderizarConstructores(filtrados);
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
         try {
-            const lista = await cargarConstructores();
-            renderizarConstructores(lista);
+            await constructoresReady;
+
+            const params = new URLSearchParams(window.location.search);
+            const query = params.get('buscar') || '';
+            const idParam = params.get('id');
+
+            if (idParam) {
+                const c = todosLosConstructores.find(c => c.id == idParam);
+                if (c) {
+                    renderizarConstructores([c]);
+                    const headerInput = document.getElementById('searchInput');
+                    if (headerInput) headerInput.value = c.nombre;
+                }
+                actualizarContador();
+                return;
+            }
+
+            const headerInput = document.getElementById('searchInput');
+            if (headerInput && query) {
+                headerInput.value = query;
+            }
+
+            filtrarPorQuery(query);
             actualizarContador();
         } catch (e) {
             const contenedor = document.getElementById('constructoresLista');

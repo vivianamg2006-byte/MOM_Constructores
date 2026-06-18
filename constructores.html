@@ -17,11 +17,12 @@
 
         .constructores-header h1 {
             color: #c0392b;
-            font-size: 1.8rem;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
         }
 
         .constructores-header p {
             color: #666;
+            font-size: 0.9rem;
         }
 
         .btn-carrito-nav {
@@ -36,6 +37,7 @@
             font-weight: bold;
             transition: all 0.3s ease;
             position: relative;
+            white-space: nowrap;
         }
 
         .btn-carrito-nav:hover {
@@ -94,7 +96,7 @@
 
         .constructor-info h3 {
             color: #c0392b;
-            font-size: 1.4rem;
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
             margin-bottom: 4px;
         }
 
@@ -190,17 +192,69 @@
             font-size: 1.1rem;
         }
 
+        @media (max-width: 768px) {
+            .constructor-card {
+                padding: 20px;
+                gap: 18px;
+            }
+            .constructor-foto {
+                width: 100px;
+                height: 100px;
+            }
+            .constructor-info {
+                min-width: 0;
+                width: 100%;
+            }
+            .constructor-accion {
+                min-width: 0;
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+
         @media (max-width: 600px) {
             .constructor-card {
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+                padding: 18px 16px;
+                gap: 14px;
+            }
+            .constructor-foto {
+                width: 90px;
+                height: 90px;
             }
             .constructor-accion {
                 align-items: center;
             }
             .constructor-tags {
                 justify-content: center;
+            }
+            .btn-ver-catalogo {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+            }
+            .no-resultados {
+                padding: 40px 16px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .constructores-header h1 {
+                font-size: 1.2rem;
+            }
+            .constructor-foto {
+                width: 80px;
+                height: 80px;
+            }
+            .btn-carrito-nav {
+                padding: 8px 16px;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -220,7 +274,15 @@
                     </div>
                 </div>
                 <div class="header-actions">
-
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Buscar por especialidad, provincia..." />
+        <button id="searchBtn" onclick="buscarConstructores()">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+            </svg>
+        </button>
+    </div>
     <button class="btn-login" id="btnLogin"
         onclick="window.location.href='login.html'">
         Ingresar
@@ -229,6 +291,10 @@
     <button class="btn-login" id="btnRegistro"
         onclick="window.location.href='login.html?tab=registro'">
         Registrarse
+    </button>
+
+    <button class="btn-fav-header" id="btnFavoritos" title="Mis favoritos" onclick="abrirFavoritos()">
+        ♥ <span class="fav-badge hidden" id="favBadge">0</span>
     </button>
 
     <div class="perfil hidden" id="userProfile">
@@ -262,6 +328,15 @@
             <h3 id="modal-saludo">Mi perfil</h3>
             <p class="modal-desc" id="modal-rol-desc"></p>
             <button class="btn-submit" onclick="cerrarSesion()" style="background:#555;">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div id="favoritosModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('favoritosModal')">&times;</button>
+            <h3>Mis Favoritos</h3>
+            <div id="favoritosLista"></div>
+            <p class="fav-vacio" id="favVacio">No tienes favoritos guardados.</p>
         </div>
     </div>
 
@@ -339,6 +414,24 @@
                 }
             }
         })();
+
+        function buscarConstructores() {
+            const q = document.getElementById('searchInput').value.trim();
+            if (q) {
+                window.location.href = 'constructores.html?buscar=' + encodeURIComponent(q);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const inp = document.getElementById('searchInput');
+            if (inp) inp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') buscarConstructores();
+            });
+        });
+
+        function abrirFavoritos() {
+            if (typeof actualizarModalFavoritos === 'function') actualizarModalFavoritos();
+            openModal('favoritosModal');
+        }
 
         function openModal(id) {
             document.getElementById(id).classList.add('open');
