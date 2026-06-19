@@ -130,12 +130,12 @@
         window.scrollTo({ top: document.getElementById('catalogoSeccion').offsetTop - 170, behavior: 'smooth' });
     }
 
-    function volverCategorias() {
+    window.volverCategorias = function () {
         categoriaActiva = null;
         document.getElementById('categoriasGrilla').style.display = 'grid';
         document.getElementById('catalogoSeccion').style.display = 'none';
         window.scrollTo({ top: document.getElementById('categoriasGrilla').offsetTop - 170, behavior: 'smooth' });
-    }
+    };
 
     function agregarAlCarrito(item, cantidad, categoriaNombre) {
         const carrito = obtenerCarrito();
