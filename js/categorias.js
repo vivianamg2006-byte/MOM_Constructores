@@ -33,6 +33,90 @@
 
     let datosCompletos = null;
     let categoriaActiva = null;
+    let constructorActivo = null;
+
+    function normalizarCat(nombre) {
+        return nombre.toLowerCase().trim().replace(/\s+/g, '_')
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function obtenerCategoriasConstructor(c) {
+        if (!c || !c.categoria) return [];
+        return c.categoria.split(',').map(s => normalizarCat(s)).filter(Boolean);
+    }
+
+    function renderizarSelectorConstructores() {
+        const contenedor = document.getElementById('selectorConstructores');
+        if (!contenedor || !todosLosConstructores) return;
+
+        const favs = typeof obtenerFavoritos === 'function' ? obtenerFavoritos() : [];
+        const idsFav = new Set(favs.map(f => f.id));
+
+        const ordenados = [...todosLosConstructores].sort((a, b) => {
+            const aFav = idsFav.has(a.id) ? 0 : 1;
+            const bFav = idsFav.has(b.id) ? 0 : 1;
+            if (aFav !== bFav) return aFav - bFav;
+            return (a.nombre || '').localeCompare(b.nombre || '');
+        });
+
+        let html = '';
+
+        const favsList = ordenados.filter(c => idsFav.has(c.id));
+        if (favsList.length > 0) {
+            html += '<div class="fav-section"><span class="fav-label">⭐ Mis favoritos</span><div class="constructor-chips">';
+            favsList.forEach(c => {
+                const inicial = c.nombre ? c.nombre.charAt(0).toUpperCase() : '?';
+                const foto = c.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
+                const activo = constructorActivo && constructorActivo.id === c.id;
+                html += `<button class="chip-constructor ${activo ? 'activo' : ''}" data-id="${c.id}">
+                    <img src="${foto}" onerror="this.src='https://placehold.co/40x40/c0392b/white?text=${inicial}'">
+                    <span>${c.nombre}</span>
+                </button>`;
+            });
+            html += '</div></div>';
+        }
+
+        html += '<div class="todos-section"><span class="fav-label">Todos los constructores</span><div class="constructor-chips">';
+        ordenados.forEach(c => {
+            const inicial = c.nombre ? c.nombre.charAt(0).toUpperCase() : '?';
+            const foto = c.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
+            const activo = constructorActivo && constructorActivo.id === c.id;
+            html += `<button class="chip-constructor ${activo ? 'activo' : ''}" data-id="${c.id}">
+                <img src="${foto}" onerror="this.src='https://placehold.co/40x40/c0392b/white?text=${inicial}'">
+                <span>${c.nombre}</span>
+            </button>`;
+        });
+        html += '</div></div>';
+
+        contenedor.innerHTML = html;
+
+        contenedor.querySelectorAll('.chip-constructor').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.dataset.id);
+                const c = todosLosConstructores.find(c => c.id === id);
+                if (c) seleccionarConstructor(c);
+            });
+        });
+    }
+
+    function seleccionarConstructor(c) {
+        constructorActivo = c;
+        categoriaActiva = null;
+
+        const url = new URL(window.location);
+        url.searchParams.set('constructor', c.id);
+        window.history.replaceState({}, '', url);
+
+        const header = document.getElementById('catalogoConstructor');
+        if (header) header.textContent = 'Servicios de ' + c.nombre;
+
+        document.getElementById('categoriasGrilla').style.display = 'grid';
+        document.getElementById('catalogoSeccion').style.display = 'none';
+        document.getElementById('breadcrumbCategoria').textContent = 'Categorías';
+
+        renderizarSelectorConstructores();
+        renderizarCategorias(datosCompletos);
+    }
 
     async function cargarPresupuestos() {
         const res = await fetch('data/presupuestos.json');
@@ -43,8 +127,22 @@
         const grilla = document.getElementById('categoriasGrilla');
         if (!grilla) return;
 
+        let catsPermitidas = null;
+        if (constructorActivo) {
+            catsPermitidas = new Set(obtenerCategoriasConstructor(constructorActivo));
+        }
+
         grilla.innerHTML = '';
-        datos.categorias.forEach(cat => {
+        const cats = constructorActivo
+            ? datos.categorias.filter(cat => catsPermitidas.has(cat.id))
+            : datos.categorias;
+
+        if (cats.length === 0) {
+            grilla.innerHTML = '<p class="no-resultados">Este constructor no tiene categorías disponibles.</p>';
+            return;
+        }
+
+        cats.forEach(cat => {
             const div = document.createElement('div');
             div.className = 'categoria-card';
             div.dataset.categoriaId = cat.id;
@@ -68,7 +166,7 @@
         document.getElementById('breadcrumbCategoria').textContent = cat.nombre;
         document.getElementById('breadcrumbCategoria').style.cursor = 'pointer';
         document.getElementById('catalogoTitulo').textContent = cat.nombre;
-        document.getElementById('catalogoConstructor').textContent = 'Constructor: ' + datosCompletos.constructorNombre;
+        document.getElementById('catalogoConstructorLabel').textContent = 'Constructor: ' + (constructorActivo ? constructorActivo.nombre : '');
 
         const contenedor = document.getElementById('catalogoItems');
         contenedor.innerHTML = '';
@@ -139,13 +237,17 @@
 
     function agregarAlCarrito(item, cantidad, categoriaNombre) {
         const carrito = obtenerCarrito();
-        const existente = carrito.find(i => i.id === `cat_${item.id}`);
+        const constructorId = constructorActivo ? constructorActivo.id : null;
+        const constructorNombre = constructorActivo ? constructorActivo.nombre : '';
+        const existente = carrito.find(i => i.id === `cat_${item.id}` && i.constructorId === constructorId);
         if (existente) {
             existente.cantidad += cantidad;
         } else {
             carrito.push({
                 id: `cat_${item.id}`,
                 itemId: item.id,
+                constructorId: constructorId,
+                constructorNombre: constructorNombre,
                 nombre: item.nombre,
                 categoria: categoriaNombre,
                 precio: obtenerPrecioBase(item),
@@ -169,6 +271,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
+        await constructoresReady;
+
         const params = new URLSearchParams(window.location.search);
         const constructorId = params.get('constructor');
 
@@ -178,10 +282,15 @@
             datosCompletos = await cargarPresupuestos();
 
             if (constructorId) {
-                const constr = datosCompletos;
-                document.getElementById('catalogoConstructor').textContent = 'Constructor: ' + constr.constructorNombre;
+                const c = todosLosConstructores.find(c => c.id == constructorId);
+                if (c) {
+                    constructorActivo = c;
+                    const header = document.getElementById('catalogoConstructor');
+                    if (header) header.textContent = 'Servicios de ' + c.nombre;
+                }
             }
 
+            renderizarSelectorConstructores();
             renderizarCategorias(datosCompletos);
             actualizarContador();
 

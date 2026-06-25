@@ -300,6 +300,70 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        .selector-constructores {
+            margin: 20px 0 10px;
+        }
+
+        .selector-constructores .fav-section,
+        .selector-constructores .todos-section {
+            margin-bottom: 10px;
+        }
+
+        .selector-constructores .fav-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .constructor-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip-constructor {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            padding: 6px 16px 6px 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-size: 0.88rem;
+            color: #444;
+        }
+
+        .chip-constructor:hover {
+            border-color: #c0392b;
+            background: #fff5f5;
+        }
+
+        .chip-constructor.activo {
+            border-color: #c0392b;
+            background: #ffebee;
+            color: #c0392b;
+            font-weight: 700;
+        }
+
+        .chip-constructor img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid transparent;
+        }
+
+        .chip-constructor.activo img {
+            border-color: #c0392b;
+        }
+
         .no-resultados {
             text-align: center;
             padding: 60px 20px;
@@ -399,13 +463,15 @@
                 <div class="categorias-header">
                     <div>
                         <h1>Categorías</h1>
-                        <p>Catálogo de servicios de <strong id="catalogoConstructor">Juan Masís</strong></p>
+                        <p id="catalogoConstructor">Selecciona un constructor para ver sus servicios</p>
                     </div>
                     <a href="carrito.html" class="btn-carrito-nav">
                         Ver Carrito
                         <span class="contador-badge" id="contadorCarrito">0</span>
                     </a>
                 </div>
+
+                <div id="selectorConstructores" class="selector-constructores"></div>
 
                 <div class="breadcrumb">
                     <a href="constructores.html">Constructores</a>

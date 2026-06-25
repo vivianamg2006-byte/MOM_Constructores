@@ -480,31 +480,27 @@
             }
         })();
 
-        // ---- Tarjeta MOM - Formulario generado por DOM ----
+        // ---- Tarjeta MOM - Persistencia en archivo (File System Access API) ----
 
+        <script src="js/persistencia.js"></script>
+
+        <script>
         (function() {
-            const STORAGE_KEY = 'mom_tarjeta';
+            const SOPORTADO = 'showDirectoryPicker' in window;
 
-            function cargarTarjeta() {
-                try {
-                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
-                } catch { return null; }
-            }
-
-            function guardarTarjeta(data) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            }
-
-            function mostrarToast(msg) {
+            function mostrarToast(msg, esError) {
                 const t = document.getElementById('toastTarjeta');
+                if (!t) return;
                 t.textContent = msg;
+                t.style.background = esError ? '#c62828' : '#2e7d32';
                 t.classList.add('show');
-                setTimeout(() => t.classList.remove('show'), 3000);
+                setTimeout(() => t.classList.remove('show'), 3500);
             }
 
-            function renderizarFormulario() {
+            let fotoDataURL = null;
+
+            function renderizarFormulario(datos) {
                 const contenedor = document.getElementById('tarjetaForm');
-                const datos = cargarTarjeta();
 
                 const form = document.createElement('form');
                 form.id = 'formTarjeta';
@@ -521,7 +517,7 @@
                     { id: 'whatsapp', label: 'WhatsApp (opcional)', type: 'text', placeholder: 'Ej: 8732-4339', required: false },
                 ];
 
-                let fotoDataURL = datos && datos.foto ? datos.foto : null;
+                fotoDataURL = datos && datos.foto ? datos.foto : null;
 
                 campos.forEach(c => {
                     const grupo = document.createElement('div');
@@ -545,11 +541,11 @@
                         input.id = c.id;
                         input.accept = 'image/*';
                         if (datos && datos.foto) {
-                            const label = document.createElement('span');
-                            label.className = 'file-label';
-                            label.textContent = ' (imagen cargada)';
-                            label.style.cssText = 'font-size:0.8rem;color:#2e7d32;font-weight:600;margin-left:6px;';
-                            grupo.appendChild(label);
+                            const lbl = document.createElement('span');
+                            lbl.className = 'file-label';
+                            lbl.textContent = ' (imagen cargada)';
+                            lbl.style.cssText = 'font-size:0.8rem;color:#2e7d32;font-weight:600;margin-left:6px;';
+                            grupo.appendChild(lbl);
                         }
                         input.addEventListener('change', function(e) {
                             const file = e.target.files[0];
@@ -622,7 +618,7 @@
                 btn.textContent = datos ? 'Actualizar tarjeta' : 'Crear tarjeta';
                 form.appendChild(btn);
 
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     const data = {};
                     campos.forEach(c => {
@@ -637,26 +633,35 @@
                     data.estado = document.getElementById('estado').value;
 
                     if (!data.nombre || !data.especialidad || !data.provincia || !data.contacto || !data.descripcion) {
-                        mostrarToast('Completa todos los campos obligatorios.');
+                        mostrarToast('Completa todos los campos obligatorios.', true);
                         return;
                     }
 
-                    guardarTarjeta(data);
-                    renderizarPreview();
-                    mostrarToast('Tarjeta guardada correctamente.');
-                    btn.textContent = 'Actualizar tarjeta';
+                    try {
+                        const guardado = await persistenciaAPI.guardarMiTarjeta(data);
+                        mostrarToast('Tarjeta guardada correctamente.');
+                        btn.textContent = 'Actualizar tarjeta';
+                        renderizarPreview(guardado);
 
-                    const ratingSection = document.getElementById('ratingSection');
-                    if (ratingSection) ratingSection.style.display = '';
+                        const rs = document.getElementById('ratingSection');
+                        if (rs) rs.style.display = '';
+                        initRating(guardado);
+                    } catch (err) {
+                        if (err.message === 'DIRECTORIO_NO_CONECTADO') {
+                            mostrarToast('La carpeta del proyecto no está conectada.', true);
+                        } else {
+                            mostrarToast('Error al guardar la tarjeta.', true);
+                            console.error(err);
+                        }
+                    }
                 });
 
                 contenedor.innerHTML = '';
                 contenedor.appendChild(form);
             }
 
-            function renderizarPreview() {
+            function renderizarPreview(datos) {
                 const contenedor = document.getElementById('tarjetaPreview');
-                const datos = cargarTarjeta();
 
                 if (!datos) {
                     contenedor.innerHTML = `
@@ -670,7 +675,6 @@
 
                 const inicial = datos.nombre ? datos.nombre.charAt(0).toUpperCase() : '?';
                 const fotoSrc = datos.foto || 'https://placehold.co/150x150/c0392b/white?text=' + inicial;
-                const categoria = datos.especialidad || '';
 
                 contenedor.innerHTML = `
                     <img src="${fotoSrc}" alt="${datos.nombre}" class="tarjeta-preview-avatar"
@@ -682,8 +686,8 @@
                     <div class="tarjeta-preview-desc">${datos.descripcion || ''}</div>
                     <div class="tarjeta-preview-estado ${(datos.estado === 'Disponible' ? 'disponible' : 'ocupado')}">${datos.estado || 'Disponible'}</div>
                     <div class="tarjeta-preview-rating">
-                        <span class="estrellas">☆☆☆☆☆</span>
-                        <span class="rating-num">Sin calificar</span>
+                        <span class="estrellas">${'★'.repeat(Math.round(datos.calificacion || 0))}${'☆'.repeat(5 - Math.round(datos.calificacion || 0))}</span>
+                        <span class="rating-num">${(datos.calificacion || 0) > 0 ? (datos.calificacion || 0).toFixed(1) : 'Sin calificar'}</span>
                     </div>
                     <div class="tarjeta-preview-social">
                         ${datos.instagram ? `<a href="${datos.instagram.startsWith('http') ? datos.instagram : 'https://instagram.com/' + datos.instagram.replace('@','')}" target="_blank" class="social-instagram" title="Instagram">
@@ -697,25 +701,9 @@
                         </a>` : ''}
                     </div>
                 `;
-
-                actualizarRatingPreview();
             }
 
-            function actualizarRatingPreview() {
-                const datos = cargarTarjeta();
-                const contenedor = document.querySelector('.tarjeta-preview-rating');
-                if (!contenedor || !datos) return;
-                const r = datos.calificacion || 0;
-                const llenas = '★'.repeat(Math.round(r));
-                const vacias = '☆'.repeat(5 - Math.round(r));
-                contenedor.innerHTML = `
-                    <span class="estrellas">${llenas}${vacias}</span>
-                    <span class="rating-num">${r > 0 ? r.toFixed(1) : 'Sin calificar'}</span>
-                `;
-            }
-
-            // ---- Rating interactivo ----
-            function initRating() {
+            function initRating(datos) {
                 const contenedor = document.getElementById('ratingEstrellas');
                 if (!contenedor) return;
                 contenedor.innerHTML = '';
@@ -723,20 +711,24 @@
                     const btn = document.createElement('button');
                     btn.textContent = '★';
                     btn.dataset.valor = i;
-                    btn.addEventListener('click', function() {
-                        const datos = cargarTarjeta();
-                        if (!datos) {
-                            document.getElementById('ratingMensaje').textContent = 'Primero crea tu tarjeta.';
-                            return;
+                    btn.addEventListener('click', async function() {
+                        try {
+                            const actual = await persistenciaAPI.cargarMiTarjeta();
+                            if (!actual) {
+                                document.getElementById('ratingMensaje').textContent = 'Primero crea tu tarjeta.';
+                                return;
+                            }
+                            const val = parseInt(this.dataset.valor);
+                            actual.calificacion = val;
+                            await persistenciaAPI.guardarMiTarjeta(actual);
+                            renderizarPreview(actual);
+                            document.querySelectorAll('#ratingEstrellas button').forEach(b => {
+                                b.classList.toggle('activa', parseInt(b.dataset.valor) <= val);
+                            });
+                            document.getElementById('ratingMensaje').textContent = 'Calificaste con ' + val + ' estrella' + (val > 1 ? 's' : '');
+                        } catch (err) {
+                            mostrarToast('Error al guardar la calificación.', true);
                         }
-                        const val = parseInt(this.dataset.valor);
-                        datos.calificacion = val;
-                        guardarTarjeta(datos);
-                        actualizarRatingPreview();
-                        document.querySelectorAll('#ratingEstrellas button').forEach(b => {
-                            b.classList.toggle('activa', parseInt(b.dataset.valor) <= val);
-                        });
-                        document.getElementById('ratingMensaje').textContent = 'Calificaste con ' + val + ' estrella' + (val > 1 ? 's' : '');
                     });
                     btn.addEventListener('mouseenter', function() {
                         const val = parseInt(this.dataset.valor);
@@ -747,31 +739,78 @@
                     contenedor.appendChild(btn);
                 }
 
-                contenedor.addEventListener('mouseleave', function() {
-                    const datos = cargarTarjeta();
-                    const r = datos ? (datos.calificacion || 0) : 0;
+                contenedor.addEventListener('mouseleave', async function() {
+                    const actual = await persistenciaAPI.cargarMiTarjeta();
+                    const r = actual ? (actual.calificacion || 0) : 0;
                     document.querySelectorAll('#ratingEstrellas button').forEach(b => {
                         b.classList.toggle('activa', parseInt(b.dataset.valor) <= Math.round(r));
                     });
                 });
 
-                const datos = cargarTarjeta();
                 const r = datos ? (datos.calificacion || 0) : 0;
                 document.querySelectorAll('#ratingEstrellas button').forEach(b => {
                     b.classList.toggle('activa', parseInt(b.dataset.valor) <= Math.round(r));
                 });
             }
 
-            renderizarFormulario();
-            renderizarPreview();
-            const datosIniciales = cargarTarjeta();
-            if (datosIniciales) {
-                const ratingSection = document.getElementById('ratingSection');
-                if (ratingSection) ratingSection.style.display = '';
+            async function iniciar() {
+                if (!SOPORTADO) {
+                    document.getElementById('tarjetaForm').innerHTML =
+                        '<div style="color:#c62828;padding:24px;text-align:center;background:#ffebee;border-radius:12px;">' +
+                        'Tu navegador no soporta el acceso al sistema de archivos.<br>Usa <strong>Google Chrome</strong> o <strong>Microsoft Edge</strong>.</div>';
+                    return;
+                }
+
+                const conectado = await persistenciaAPI.estaConectado();
+                if (!conectado) {
+                    document.getElementById('tarjetaForm').innerHTML = `
+                        <div style="text-align:center;padding:40px 0;">
+                            <p style="color:#666;margin-bottom:20px;">Para guardar tu tarjeta profesional, conecta la carpeta del proyecto.</p>
+                            <button id="btnConectarCarpeta" class="btn-guardar" style="width:auto;padding:12px 28px;">📁 Conectar carpeta del proyecto</button>
+                        </div>
+                    `;
+                    document.getElementById('tarjetaPreview').innerHTML =
+                        '<div class="tarjeta-vacia"><div class="icono">&#128100;</div><p>Conecta la carpeta para ver tu tarjeta.</p></div>';
+
+                    document.getElementById('btnConectarCarpeta').addEventListener('click', conectarCarpeta);
+                    return;
+                }
+
+                let datos = null;
+                try {
+                    datos = await persistenciaAPI.cargarMiTarjeta();
+                } catch (e) {
+                    console.error('Error cargando tarjeta:', e);
+                    mostrarToast('Error al cargar los datos.', true);
+                }
+
+                renderizarFormulario(datos);
+                renderizarPreview(datos);
+
+                if (datos) {
+                    const rs = document.getElementById('ratingSection');
+                    if (rs) rs.style.display = '';
+                    initRating(datos);
+                }
             }
-            initRating();
+
+            async function conectarCarpeta() {
+                try {
+                    await persistenciaAPI.pedirDirectorio();
+                    mostrarToast('Carpeta conectada correctamente.');
+                    iniciar();
+                } catch (e) {
+                    if (e.name !== 'AbortError') {
+                        mostrarToast('Error al conectar la carpeta.', true);
+                        console.error(e);
+                    }
+                }
+            }
+
+            window.conectarCarpeta = conectarCarpeta;
+            iniciar();
         })();
-    </script>
+        </script>
 
 </body>
 </html>

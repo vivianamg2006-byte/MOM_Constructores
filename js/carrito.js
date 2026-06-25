@@ -40,38 +40,58 @@
         let totalCantidad = 0;
         let totalPrecio = 0;
 
+        const grupos = {};
         items.forEach((item, index) => {
-            const subtotal = item.cantidad * item.precio;
-            totalCantidad += item.cantidad;
-            totalPrecio += subtotal;
-
-            const unidadLabel = item.esPorMetro
-                ? (item.unidad === '/ mL' ? 'mL' : 'm²')
-                : 'unidad';
-
-            const div = document.createElement('div');
-            div.className = 'item-carrito';
-            div.innerHTML = `
-                <div class="item-carrito-info">
-                    <div class="item-carrito-nombre">${item.nombre}</div>
-                    <div class="item-carrito-precio">
-                        ₡${formatear(item.precio)} ${item.unidad}
-                        ${item.categoria ? '<span class="item-carrito-categoria"> · ' + item.categoria + '</span>' : ''}
-                    </div>
-                </div>
-                <div class="item-carrito-cantidad">
-                    <button class="btn-cambio" data-index="${index}" data-cambio="-1">−</button>
-                    <input type="number" class="input-metros-item" value="${item.cantidad}" min="1" max="1000" data-index="${index}">
-                    <button class="btn-cambio" data-index="${index}" data-cambio="1">+</button>
-                    <span class="m2-label">${unidadLabel}</span>
-                </div>
-                <div class="item-carrito-subtotal">
-                    ₡${formatear(subtotal)}
-                </div>
-                <button class="btn-eliminar" data-index="${index}">&times;</button>
-            `;
-            contenedor.appendChild(div);
+            const key = item.constructorId || 'sin_constructor';
+            if (!grupos[key]) {
+                grupos[key] = { nombre: item.constructorNombre || 'Sin constructor', items: [] };
+            }
+            grupos[key].items.push({ item, index });
         });
+
+        const gruposHtml = [];
+        for (const key in grupos) {
+            const grupo = grupos[key];
+            let html = `<div class="grupo-carrito">`;
+            if (key !== 'sin_constructor') {
+                html += `<div class="grupo-carrito-header">${grupo.nombre}</div>`;
+            }
+            grupo.items.forEach(({ item, index }) => {
+                const subtotal = item.cantidad * item.precio;
+                totalCantidad += item.cantidad;
+                totalPrecio += subtotal;
+
+                const unidadLabel = item.esPorMetro
+                    ? (item.unidad === '/ mL' ? 'mL' : 'm²')
+                    : 'unidad';
+
+                html += `
+                    <div class="item-carrito">
+                        <div class="item-carrito-info">
+                            <div class="item-carrito-nombre">${item.nombre}</div>
+                            <div class="item-carrito-precio">
+                                ₡${formatear(item.precio)} ${item.unidad}
+                                ${item.categoria ? '<span class="item-carrito-categoria"> · ' + item.categoria + '</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="item-carrito-cantidad">
+                            <button class="btn-cambio" data-index="${index}" data-cambio="-1">−</button>
+                            <input type="number" class="input-metros-item" value="${item.cantidad}" min="1" max="1000" data-index="${index}">
+                            <button class="btn-cambio" data-index="${index}" data-cambio="1">+</button>
+                            <span class="m2-label">${unidadLabel}</span>
+                        </div>
+                        <div class="item-carrito-subtotal">
+                            ₡${formatear(subtotal)}
+                        </div>
+                        <button class="btn-eliminar" data-index="${index}">&times;</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            gruposHtml.push(html);
+        }
+
+        contenedor.innerHTML = gruposHtml.join('');
 
         document.getElementById('totalMetros').textContent = formatear(totalCantidad);
         document.getElementById('totalPrecio').textContent = formatear(totalPrecio);
