@@ -1,9 +1,12 @@
+// Lista global de todos los constructores cargados desde el JSON
 let todosLosConstructores = [];
+// Promesa que precarga los constructores al iniciar la aplicación
 const constructoresReady = fetch('data/constructores.json')
     .then(r => r.json())
     .then(data => { todosLosConstructores = data; })
     .catch(e => console.error('Error cargando constructores:', e));
 
+// Obtiene el ID único del usuario desde la sesión en localStorage; devuelve 'guest' si no hay sesión
 function getUserId() {
     try {
         const s = JSON.parse(localStorage.getItem('mom_sesion') || '{}');
@@ -11,18 +14,22 @@ function getUserId() {
     } catch { return 'guest'; }
 }
 
+// Recupera el arreglo de favoritos del usuario desde localStorage
 function obtenerFavoritos() {
     return JSON.parse(localStorage.getItem('mom_favoritos_' + getUserId()) || '[]');
 }
 
+// Persiste el arreglo de favoritos del usuario en localStorage
 function guardarFavoritos(lista) {
     localStorage.setItem('mom_favoritos_' + getUserId(), JSON.stringify(lista));
 }
 
+// Retorna true si el constructor con el ID dado está en favoritos
 function esFavorito(id) {
     return obtenerFavoritos().some(f => f.id === id);
 }
 
+// Actualiza el badge del menú con la cantidad de favoritos (oculta si está vacío)
 function actualizarBadgeFav() {
     const badge = document.getElementById('favBadge');
     if (!badge) return;
@@ -35,6 +42,7 @@ function actualizarBadgeFav() {
     }
 }
 
+// Agrega o elimina un constructor de favoritos y actualiza el botón y el badge
 function toggleFavorito(id) {
     let favs = obtenerFavoritos();
     const idx = favs.findIndex(f => f.id === id);
@@ -47,6 +55,7 @@ function toggleFavorito(id) {
     guardarFavoritos(favs);
     actualizarBadgeFav();
 
+    // Actualiza el estado visual del botón de favorito
     const btn = document.querySelector(`.btn-favorito[data-id="${id}"]`);
     if (btn) {
         btn.classList.toggle('activo');
@@ -56,6 +65,7 @@ function toggleFavorito(id) {
     }
 }
 
+// Renderiza la lista de favoritos dentro del modal o muestra mensaje vacío
 function actualizarModalFavoritos() {
     const contenedor = document.getElementById('favoritosLista');
     const vacio = document.getElementById('favVacio');
@@ -78,14 +88,17 @@ function actualizarModalFavoritos() {
     `).join('');
 }
 
+// Expone funciones al ámbito global para usarlas desde el HTML
 window.toggleFavorito = toggleFavorito;
 window.actualizarModalFavoritos = actualizarModalFavoritos;
 
+// Al cargar el DOM, actualiza el badge de favoritos y carga las categorías
 document.addEventListener('DOMContentLoaded', () => {
     actualizarBadgeFav();
     cargarCategorias();
 });
 
+// Carga las categorías de servicios desde presupuestos.json y renderiza tarjetas clickeables
 async function cargarCategorias() {
     const contenedor = document.getElementById('categorias-container');
     if (!contenedor) return;
@@ -100,6 +113,7 @@ async function cargarCategorias() {
             return;
         }
 
+        // Renderiza cada categoría como una tarjeta
         contenedor.innerHTML = categorias.map(cat => `
             <div class="categoria-card" data-categoria="${cat.id}">
                 <div class="cat-icono">${cat.icono || ''}</div>
@@ -108,6 +122,7 @@ async function cargarCategorias() {
             </div>
         `).join('');
 
+        // Asigna evento de clic a cada tarjeta para redirigir a la página de categoría
         document.querySelectorAll('.categoria-card').forEach(card => {
             card.addEventListener('click', () => {
                 const categoria = card.getAttribute('data-categoria');

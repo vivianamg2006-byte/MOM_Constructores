@@ -1,50 +1,62 @@
+// IIFE: encapsula el módulo de categorías
 (function () {
+    // Clave para guardar/leer el carrito desde localStorage
     const STORAGE_KEY = 'carrito_presupuesto';
 
+    // Obtiene el carrito del localStorage
     function obtenerCarrito() {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     }
 
+    // Guarda el carrito en localStorage
     function guardarCarrito(items) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     }
 
+    // Actualiza el contador del carrito en el header
     function actualizarContador() {
         const span = document.getElementById('contadorCarrito');
         if (span) {
-            const total = obtenerCarrito().reduce((s, i) => s + i.metros, 0);
+            const total = obtenerCarrito().reduce((s, i) => s + i.cantidad, 0);
             span.textContent = total;
         }
     }
 
+    // Formatea un número a moneda local (CRC)
     function formatear(num) {
         return num.toLocaleString('es-CR');
     }
 
+    // Obtiene la unidad de medida según el tipo de precio del item
     function obtenerUnidad(item) {
         if (item.precio_m2) return '/ m²';
         if (item.precio_mL) return '/ mL';
         return '';
     }
 
+    // Obtiene el precio base del item (m², mL o precio fijo)
     function obtenerPrecioBase(item) {
         return item.precio_m2 || item.precio_mL || item.precio || 0;
     }
 
+    // Estado global del módulo
     let datosCompletos = null;
     let categoriaActiva = null;
     let constructorActivo = null;
 
+    // Normaliza un nombre de categoría a ID limpio (lowercase, sin tildes, con _)
     function normalizarCat(nombre) {
         return nombre.toLowerCase().trim().replace(/\s+/g, '_')
             .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
+    // Obtiene las categorías de un constructor a partir de su campo 'categoria'
     function obtenerCategoriasConstructor(c) {
         if (!c || !c.categoria) return [];
         return c.categoria.split(',').map(s => normalizarCat(s)).filter(Boolean);
     }
 
+    // Renderiza los chips de selección de constructor (favoritos primero)
     function renderizarSelectorConstructores() {
         const contenedor = document.getElementById('selectorConstructores');
         if (!contenedor || !todosLosConstructores) return;
@@ -99,6 +111,7 @@
         });
     }
 
+    // Selecciona un constructor y muestra sus categorías
     function seleccionarConstructor(c) {
         constructorActivo = c;
         categoriaActiva = null;
@@ -118,11 +131,13 @@
         renderizarCategorias(datosCompletos);
     }
 
+    // Carga los datos de presupuestos desde el JSON
     async function cargarPresupuestos() {
         const res = await fetch('data/presupuestos.json');
         return res.json();
     }
 
+    // Renderiza las tarjetas de categoría en la grilla
     function renderizarCategorias(datos) {
         const grilla = document.getElementById('categoriasGrilla');
         if (!grilla) return;
@@ -156,6 +171,7 @@
         });
     }
 
+    // Muestra el catálogo de items de una categoría específica
     function mostrarCatalogo(categoriaId) {
         categoriaActiva = categoriaId;
         const cat = datosCompletos.categorias.find(c => c.id === categoriaId);
@@ -228,6 +244,7 @@
         window.scrollTo({ top: document.getElementById('catalogoSeccion').offsetTop - 170, behavior: 'smooth' });
     }
 
+    // Vuelve a la vista de categorías desde el catálogo
     window.volverCategorias = function () {
         categoriaActiva = null;
         document.getElementById('categoriasGrilla').style.display = 'grid';
@@ -235,6 +252,7 @@
         window.scrollTo({ top: document.getElementById('categoriasGrilla').offsetTop - 170, behavior: 'smooth' });
     };
 
+    // Agrega un item al carrito (o incrementa su cantidad si ya existe)
     function agregarAlCarrito(item, cantidad, categoriaNombre) {
         const carrito = obtenerCarrito();
         const constructorId = constructorActivo ? constructorActivo.id : null;
@@ -270,6 +288,7 @@
         }
     }
 
+    // Al cargar el DOM: espera constructores, carga presupuestos y renderiza
     document.addEventListener('DOMContentLoaded', async () => {
         await constructoresReady;
 

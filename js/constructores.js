@@ -1,18 +1,23 @@
+// IIFE: encapsula el módulo de constructores
 (function () {
+    // Clave para guardar/leer el carrito desde localStorage
     const STORAGE_KEY = 'carrito_presupuesto';
 
+    // Obtiene el carrito del localStorage
     function obtenerCarrito() {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     }
 
+    // Actualiza el contador del carrito en el header
     function actualizarContador() {
         const span = document.getElementById('contadorCarrito');
         if (span) {
-            const total = obtenerCarrito().reduce((s, i) => s + i.metros, 0);
+            const total = obtenerCarrito().reduce((s, i) => s + i.cantidad, 0);
             span.textContent = total;
         }
     }
 
+    // Verifica si un constructor coincide con el texto de búsqueda
     function coincide(constructor, query) {
         const q = query.toLowerCase();
         return (
@@ -24,6 +29,7 @@
         );
     }
 
+    // Renderiza las tarjetas de constructores en el DOM
     function renderizarConstructores(lista) {
         const contenedor = document.getElementById('constructoresLista');
         if (!contenedor) return;
@@ -77,6 +83,7 @@
         initRatingEstrellas();
     }
 
+    // Filtra constructores según el texto de búsqueda y los renderiza
     function filtrarPorQuery(query) {
         if (!query) {
             renderizarConstructores(todosLosConstructores);
@@ -86,6 +93,7 @@
         renderizarConstructores(filtrados);
     }
 
+    // Al cargar el DOM: espera constructores, aplica filtros y renderiza
     document.addEventListener('DOMContentLoaded', async () => {
         try {
             await constructoresReady;
@@ -120,6 +128,7 @@
         }
     });
 
+    // Obtiene la calificación guardada de un constructor desde localStorage
     function obtenerRatingConstructor(id) {
         try {
             const ratings = JSON.parse(localStorage.getItem('mom_ratings') || '{}');
@@ -127,6 +136,7 @@
         } catch { return 0; }
     }
 
+    // Guarda la calificación de un constructor en localStorage
     function guardarRatingConstructor(id, valor) {
         try {
             const ratings = JSON.parse(localStorage.getItem('mom_ratings') || '{}');
@@ -135,6 +145,7 @@
         } catch {}
     }
 
+    // Inicializa el sistema de calificación por estrellas en cada tarjeta
     function initRatingEstrellas() {
         document.querySelectorAll('.constructor-calificacion').forEach(container => {
             const id = container.dataset.constructorId;

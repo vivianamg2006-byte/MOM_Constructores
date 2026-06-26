@@ -1,18 +1,24 @@
+// IIFE: encapsula el módulo del carrito
 (function () {
+    // Clave para guardar/leer el carrito desde localStorage
     const STORAGE_KEY = 'carrito_presupuesto';
 
+    // Obtiene el carrito del localStorage
     function obtenerCarrito() {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     }
 
+    // Guarda el carrito en localStorage
     function guardarCarrito(items) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     }
 
+    // Formatea un número a moneda local (CRC)
     function formatear(num) {
         return num.toLocaleString('es-CR');
     }
 
+    // Renderiza el contenido del carrito en el DOM
     function renderizarCarrito() {
         const items = obtenerCarrito();
         const contenedor = document.getElementById('itemsCarrito');
@@ -40,6 +46,7 @@
         let totalCantidad = 0;
         let totalPrecio = 0;
 
+        // Agrupa los items por constructor
         const grupos = {};
         items.forEach((item, index) => {
             const key = item.constructorId || 'sin_constructor';
@@ -56,6 +63,7 @@
             if (key !== 'sin_constructor') {
                 html += `<div class="grupo-carrito-header">${grupo.nombre}</div>`;
             }
+            // Genera el HTML para cada item del grupo
             grupo.items.forEach(({ item, index }) => {
                 const subtotal = item.cantidad * item.precio;
                 totalCantidad += item.cantidad;
@@ -93,9 +101,11 @@
 
         contenedor.innerHTML = gruposHtml.join('');
 
+        // Actualiza los totales en el DOM
         document.getElementById('totalMetros').textContent = formatear(totalCantidad);
         document.getElementById('totalPrecio').textContent = formatear(totalPrecio);
 
+        // Event listeners para botones de cambio de cantidad (+/−)
         document.querySelectorAll('.btn-cambio').forEach(btn => {
             btn.addEventListener('click', function () {
                 const idx = parseInt(this.dataset.index);
@@ -107,6 +117,7 @@
             });
         });
 
+        // Event listeners para cambio manual de cantidad en input
         document.querySelectorAll('.input-metros-item').forEach(input => {
             input.addEventListener('change', function () {
                 const idx = parseInt(this.dataset.index);
@@ -120,6 +131,7 @@
             });
         });
 
+        // Event listeners para botones de eliminar item
         document.querySelectorAll('.btn-eliminar').forEach(btn => {
             btn.addEventListener('click', function () {
                 const idx = parseInt(this.dataset.index);
@@ -131,6 +143,7 @@
         });
     }
 
+    // Vacía todo el carrito con confirmación
     function limpiarCarrito() {
         if (confirm('¿Vaciar todo el presupuesto?')) {
             guardarCarrito([]);
@@ -138,10 +151,12 @@
         }
     }
 
+    // Expone funciones al ámbito global
     window.limpiarCarrito = limpiarCarrito;
     window.obtenerCarrito = obtenerCarrito;
     window.guardarCarrito = guardarCarrito;
     window.formatear = formatear;
 
+    // Al cargar el DOM, renderiza el carrito
     document.addEventListener('DOMContentLoaded', renderizarCarrito);
 })();

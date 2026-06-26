@@ -443,8 +443,10 @@
     </footer>
 
     <script>
+        // Rol seleccionado por el usuario (cliente o constructor)
         let rolSeleccionado = 'cliente';
 
+        // Cambia entre las pestañas de inicio de sesión y registro
         function switchTab(tab) {
             document.querySelectorAll('.auth-tab').forEach((t, i) => {
                 t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'registro'));
@@ -454,12 +456,14 @@
             clearAlerts();
         }
 
+        // Selecciona el rol del usuario (cliente o constructor)
         function seleccionarRol(rol) {
             rolSeleccionado = rol;
             document.getElementById('rol-cliente').classList.toggle('selected', rol === 'cliente');
             document.getElementById('rol-constructor').classList.toggle('selected', rol === 'constructor');
         }
 
+        // Muestra un mensaje de alerta en un elemento específico
         function showAlert(id, msg, type) {
             const el = document.getElementById(id);
             el.textContent = msg;
@@ -467,15 +471,18 @@
             el.style.display = 'block';
         }
 
+        // Limpia todas las alertas visibles en la página
         function clearAlerts() {
             document.querySelectorAll('.alert').forEach(a => { a.style.display = 'none'; });
         }
 
+        // Marca o desmarca un campo como inválido y muestra su error
         function markError(inputId, errorId, show) {
             document.getElementById(inputId).classList.toggle('error', show);
             document.getElementById(errorId).style.display = show ? 'block' : 'none';
         }
 
+        // Maneja el proceso de inicio de sesión
         function handleLogin() {
             const email = document.getElementById('login-email').value.trim();
             const pass  = document.getElementById('login-pass').value;
@@ -502,6 +509,7 @@
             window.location.href = 'index.html';
         }
 
+        // Maneja el proceso de registro de usuario
         function handleRegistro() {
             const nombre = document.getElementById('reg-nombre').value.trim();
             const email  = document.getElementById('reg-email').value.trim();
@@ -553,10 +561,12 @@
             }, 1200);
         }
 
+        // Abre el modal de recuperación de contraseña
         function openForgot() {
             document.getElementById('forgotModal').classList.add('open');
         }
 
+        // Cierra el modal de recuperación de contraseña
         function closeForgot() {
             document.getElementById('forgotModal').classList.remove('open');
             document.getElementById('forgot-email').value = '';
@@ -564,6 +574,7 @@
             markError('forgot-email', 'err-forgot-email', false);
         }
 
+        // Maneja el envío del formulario de recuperación de contraseña
         function handleForgot() {
             const email = document.getElementById('forgot-email').value.trim();
             const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -575,10 +586,12 @@
             document.getElementById('forgot-email').value = '';
         }
 
+        // Cierra el modal al hacer clic fuera del contenido
         document.getElementById('forgotModal').addEventListener('click', function(e) {
             if (e.target === this) closeForgot();
         });
 
+        // Cambia a la pestaña de registro si el parámetro 'tab' está presente en la URL
         window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
 

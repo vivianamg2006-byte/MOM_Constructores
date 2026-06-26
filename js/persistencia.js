@@ -1,3 +1,4 @@
+// Datos semilla de constructores precargados para la aplicación
 const SEED_CONSTRUCTORES = [
   {
     "id": 1,
@@ -29,10 +30,12 @@ const SEED_CONSTRUCTORES = [
   }
 ];
 
+// Constantes para la base de datos IndexedDB de persistencia
 const PERSISTENCIA_DB = 'mom_persistencia';
 const PERSISTENCIA_STORE = 'handles';
 const PERSISTENCIA_KEY = 'dirHandle';
 
+// Abre (o crea) la base de datos IndexedDB para almacenar el handle del directorio
 function abrirDB() {
     return new Promise((resolve, reject) => {
         const req = indexedDB.open(PERSISTENCIA_DB, 1);
@@ -42,6 +45,7 @@ function abrirDB() {
     });
 }
 
+// Guarda el FileSystemDirectoryHandle en IndexedDB para uso futuro
 async function guardarHandle(handle) {
     const db = await abrirDB();
     return new Promise((resolve, reject) => {
@@ -52,6 +56,7 @@ async function guardarHandle(handle) {
     });
 }
 
+// Recupera el FileSystemDirectoryHandle guardado desde IndexedDB
 async function obtenerHandle() {
     const db = await abrirDB();
     return new Promise((resolve, reject) => {
@@ -62,6 +67,7 @@ async function obtenerHandle() {
     });
 }
 
+// Verifica y solicita permisos de lectura/escritura para el directorio guardado
 async function obtenerDirectorio() {
     let handle = await obtenerHandle();
     if (!handle) return null;
@@ -76,6 +82,7 @@ async function obtenerDirectorio() {
     }
 }
 
+// Navega por subdirectorios hasta llegar al archivo en la ruta especificada
 async function navegarA(dirHandle, ruta) {
     const parts = ruta.replace(/\\/g, '/').split('/');
     let current = dirHandle;
@@ -85,6 +92,7 @@ async function navegarA(dirHandle, ruta) {
     return await current.getFileHandle(parts[parts.length - 1]);
 }
 
+// Lee y parsea el archivo constructores.json desde el directorio persistente
 async function leerConstructores() {
     const dir = await obtenerDirectorio();
     if (!dir) throw new Error('DIRECTORIO_NO_CONECTADO');
@@ -93,6 +101,7 @@ async function leerConstructores() {
     return await file.json();
 }
 
+// Escribe el arreglo de constructores en el archivo JSON del directorio persistente
 async function escribirConstructores(data) {
     const dir = await obtenerDirectorio();
     if (!dir) throw new Error('DIRECTORIO_NO_CONECTADO');
@@ -102,21 +111,25 @@ async function escribirConstructores(data) {
     await writable.close();
 }
 
+// Obtiene los datos de la sesión actual desde localStorage; devuelve null si no existe
 function obtenerSesion() {
     try { return JSON.parse(localStorage.getItem('mom_sesion') || 'null'); } catch { return null; }
 }
 
 const persistenciaAPI = {
+    // Solicita al usuario seleccionar un directorio y guarda su handle
     async pedirDirectorio() {
         const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
         await guardarHandle(handle);
         return handle;
     },
 
+    // Verifica si hay un directorio persistente con permisos concedidos
     async estaConectado() {
         return !!(await obtenerDirectorio());
     },
 
+    // Asegura que los constructores semilla estén presentes en la lista
     asegurarSeed(lista) {
         const idsSeed = new Set(SEED_CONSTRUCTORES.map(s => s.id));
         for (const seed of SEED_CONSTRUCTORES) {
@@ -127,6 +140,7 @@ const persistenciaAPI = {
         return lista;
     },
 
+    // Guarda o actualiza la tarjeta del usuario en el archivo JSON persistente
     async guardarMiTarjeta(datos) {
         const sesion = obtenerSesion();
         const userId = sesion ? sesion.id : 'anon_' + Date.now();
@@ -138,6 +152,7 @@ const persistenciaAPI = {
 
         const idx = lista.findIndex(c => c.userId === userId);
 
+        // Construye el objeto del constructor con los datos del formulario
         const entrada = {
             userId,
             nombre: datos.nombre || '',
@@ -170,6 +185,7 @@ const persistenciaAPI = {
         return entrada;
     },
 
+    // Carga la tarjeta del usuario desde el archivo JSON según su sesión
     async cargarMiTarjeta() {
         const sesion = obtenerSesion();
         if (!sesion) return null;

@@ -25,37 +25,6 @@
             font-size: 0.9rem;
         }
 
-        .btn-carrito-nav {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #c0392b;
-            color: white;
-            padding: 10px 22px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            position: relative;
-            white-space: nowrap;
-        }
-
-        .btn-carrito-nav:hover {
-            background-color: #a93226;
-            transform: scale(1.03);
-            color: white;
-        }
-
-        .contador-badge {
-            background-color: #ffd54f;
-            color: #333;
-            border-radius: 50%;
-            padding: 1px 8px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-left: 5px;
-        }
-
         .constructor-card {
             display: flex;
             gap: 25px;
@@ -282,10 +251,6 @@
                 width: 80px;
                 height: 80px;
             }
-            .btn-carrito-nav {
-                padding: 8px 16px;
-                font-size: 0.85rem;
-            }
         }
     </style>
 </head>
@@ -318,10 +283,13 @@
         Ingresar
     </button>
 
-    <button class="btn-login" id="btnRegistro"
-        onclick="window.location.href='login.html?tab=registro'">
-        Registrarse
-    </button>
+    <a href="carrito.html" class="btn-carrito-header" id="btnCarritoHeader" title="Ver carrito">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span class="carrito-badge" id="contadorCarrito">0</span>
+    </a>
 
     <button class="btn-fav-header" id="btnFavoritos" title="Mis favoritos" onclick="abrirFavoritos()">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2">
@@ -381,10 +349,6 @@
                         <h1>Constructores</h1>
                         <p>Encuentra al profesional ideal para tu proyecto</p>
                     </div>
-                    <a href="carrito.html" class="btn-carrito-nav">
-                        Ver Carrito
-                        <span class="contador-badge" id="contadorCarrito">0</span>
-                    </a>
                 </div>
                 <div id="constructoresLista"></div>
             </div>
@@ -408,9 +372,10 @@
 
     <script>
         (function() {
+            // Obtiene los datos de sesión desde localStorage
             const sesionData = localStorage.getItem('mom_sesion');
+            // Referencias a elementos del DOM para el perfil de usuario
             const btnLogin = document.getElementById('btnLogin');
-            const btnRegistro = document.getElementById('btnRegistro');
             const userProfile = document.getElementById('userProfile');
             const profileName = document.getElementById('profileName');
             const profileImg = document.getElementById('profileImg');
@@ -418,17 +383,20 @@
             const tabTarjeta = document.getElementById('tab-tarjeta');
 
             if (sesionData) {
+                // Si existe sesión, la parsea y muestra el perfil del usuario
                 const sesion = JSON.parse(sesionData);
 
+                // Oculta botones de login/registro y muestra el perfil
                 btnLogin.classList.add('hidden');
-                btnRegistro.classList.add('hidden');
                 userProfile.classList.remove('hidden');
                 profileName.textContent = sesion.nombre;
                 profileNivel.textContent = 'Nivel ' + (sesion.nivel || 1);
 
+                // Genera la imagen de perfil con la inicial del nombre
                 const inicial = sesion.nombre.charAt(0).toUpperCase();
                 profileImg.src = sesion.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
 
+                // Al hacer clic en el perfil, abre el modal con saludo y rol
                 userProfile.onclick = function() {
                     document.getElementById('modal-saludo').textContent = '¡Hola, ' + sesion.nombre + '!';
                     document.getElementById('modal-rol-desc').textContent =
@@ -438,9 +406,14 @@
                     openModal('perfilModal');
                 };
 
+                // Muestra la pestaña de tarjeta solo si el rol es constructor
                 if (sesion.rol === 'constructor') {
                     tabTarjeta.classList.remove('hidden');
                     tabTarjeta.style.display = 'block';
+                    const _ch = document.getElementById('btnCarritoHeader');
+                    if (_ch) _ch.style.display = 'none';
+                    const _tc = document.querySelector('.nav-tabs a[href="carrito.html"]');
+                    if (_tc) _tc.parentElement.style.display = 'none';
                 } else {
                     tabTarjeta.classList.add('hidden');
                     tabTarjeta.style.display = 'none';
@@ -448,12 +421,14 @@
             }
         })();
 
+        // Redirige a constructores.html con el texto de búsqueda como parámetro URL
         function buscarConstructores() {
             const q = document.getElementById('searchInput').value.trim();
             if (q) {
                 window.location.href = 'constructores.html?buscar=' + encodeURIComponent(q);
             }
         }
+        // Al cargar el DOM, asigna el evento Enter al campo de búsqueda si existe
         document.addEventListener('DOMContentLoaded', function() {
             const inp = document.getElementById('searchInput');
             if (inp) inp.addEventListener('keydown', function(e) {
@@ -461,19 +436,23 @@
             });
         });
 
+        // Abre el modal de favoritos y actualiza su contenido si la función existe
         function abrirFavoritos() {
             if (typeof actualizarModalFavoritos === 'function') actualizarModalFavoritos();
             openModal('favoritosModal');
         }
 
+        // Muestra un modal agregando la clase 'open'
         function openModal(id) {
             document.getElementById(id).classList.add('open');
         }
 
+        // Cierra un modal removiendo la clase 'open'
         function closeModal(id) {
             document.getElementById(id).classList.remove('open');
         }
 
+        // Elimina la sesión de localStorage y redirige al login
         function cerrarSesion() {
             localStorage.removeItem('mom_sesion');
             window.location.href = 'login.html';

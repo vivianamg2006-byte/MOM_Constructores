@@ -1,3 +1,5 @@
+/* === RESET Y BASE === */
+
 * {
     margin: 0;
     padding: 0;
@@ -17,7 +19,7 @@ body {
     width: 100%;
 }
 
-/* --- HEADER PRINCIPAL --- */
+/* === HEADER === */
 
 .site-header {
     background-color: #c0392b;
@@ -72,6 +74,8 @@ body {
     align-items: center;
     gap: 15px;
 }
+
+/* === BUSCADOR (HEADER) === */
 
 .search-box {
     display: flex;
@@ -132,7 +136,44 @@ body {
     color: #c0392b;
 }
 
-/* Botón corazón de favoritos en el header */
+/* === CARRITO (HEADER) === */
+.btn-carrito-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 7px 14px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    position: relative;
+}
+.btn-carrito-header:hover {
+    background-color: white;
+    color: #c0392b;
+}
+.btn-carrito-header svg {
+    flex-shrink: 0;
+}
+.carrito-badge {
+    background-color: #ffd54f;
+    color: #333;
+    border-radius: 50%;
+    padding: 1px 7px;
+    font-size: 0.72rem;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+    line-height: 18px;
+    display: inline-block;
+}
+
+/* === FAVORITOS (HEADER) === */
 .btn-fav-header {
     background: none;
     border: none;
@@ -164,7 +205,7 @@ body {
     padding: 0 3px;
 }
 
-/* Estilos dentro del modal de favoritos */
+/* === MODAL FAVORITOS === */
 #favoritosLista .favorito-item {
     display: flex;
     justify-content: space-between;
@@ -194,6 +235,8 @@ body {
     margin: 10px 0;
     display: none;
 }
+
+/* === PERFIL DE USUARIO === */
 
 .perfil {
     display: flex;
@@ -237,7 +280,7 @@ body {
     display: none !important;
 }
 
-/* --- MENÚ DE PESTAÑAS (NAV) --- */
+/* === NAVEGACIÓN === */
 
 .nav-tabs {
     padding: 8px 0 0 0;
@@ -270,7 +313,7 @@ body {
     color: #c0392b;
 }
 
-/* --- MODALES --- */
+/* === MODALES === */
 
 .modal-overlay {
     position: fixed;
@@ -400,12 +443,14 @@ body {
     text-decoration: underline;
 }
 
-/* --- SECCIONES DE LA PÁGINA --- */
+/* === CONTENEDOR GENERAL === */
 
 .container {
     width: min(92%, 1200px);
     margin: 0 auto;
 }
+
+/* === HERO / PORTADA === */
 
 .hero {
     background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
@@ -446,6 +491,8 @@ body {
     color: #555;
     margin-bottom: 25px;
 }
+
+/* === BOTONES PRINCIPALES === */
 
 .btn-primary {
     background-color: #c0392b;
@@ -519,6 +566,8 @@ body {
     margin-top: 10px;
 }
 
+/* === SECCIÓN PROBLEMA-SOLUCIÓN === */
+
 .problema-solucion {
     background-color: white;
     padding: 60px 0;
@@ -548,6 +597,8 @@ body {
     color: #555;
     line-height: 1.6;
 }
+
+/* === SECCIÓN CATEGORÍAS === */
 
 .categorias-dinamicas {
     background-color: #f5f5f5;
@@ -595,7 +646,7 @@ body {
     margin: 0;
 }
 
-/* --- FOOTER --- */
+/* === FOOTER === */
 
 footer {
     background-color: #1a1a1a;
@@ -613,7 +664,7 @@ footer a:hover {
     color: white;
 }
 
-/* --- DISEÑO RESPONSIVO --- */
+/* === RESPONSIVE === */
 
 @media (max-width: 992px) {
     .hero-text h1 {
@@ -759,9 +810,11 @@ footer a:hover {
         width: 100%;
     }
 
-    .btn-login {
+    .btn-login,
+    .btn-carrito-header {
         width: 100%;
         text-align: center;
+        justify-content: center;
     }
 
     .nav-tabs a {
@@ -799,7 +852,7 @@ footer a:hover {
     }
 }
 
-/* Layout General de la página de constructores */
+/* === CONSTRUCTORES (LAYOUT GENERAL) === */
 .constructores-main-container {
     display: flex;
     gap: 20px;
@@ -846,7 +899,7 @@ footer a:hover {
     margin-top: 20px;
 }
 
-/* Botón de favorito en la tarjeta */
+/* === BOTÓN FAVORITO (TARJETA) === */
 .btn-favorito {
     background: none;
     border: 2px solid #c0392b;
@@ -875,7 +928,7 @@ footer a:hover {
     background: #fff5f5;
 }
 
-/* Estilos Básicos para el Modal Emergente */
+/* === MODAL EMERGENTE (GALERÍA) === */
 .modal-overlay {
     position: fixed;
     top: 0;
