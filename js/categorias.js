@@ -78,10 +78,10 @@
             html += '<div class="fav-section"><span class="fav-label">⭐ Mis favoritos</span><div class="constructor-chips">';
             favsList.forEach(c => {
                 const inicial = c.nombre ? c.nombre.charAt(0).toUpperCase() : '?';
-                const foto = c.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
+                const foto = c.foto || "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 40 40%27%3E%3Crect fill=%27%23c0392b%27 width=%2740%27 height=%2740%27/%3E%3Ctext x=%2720%27 y=%2726%27 text-anchor=%27middle%27 fill=%27white%27 font-size=%2718%27 font-weight=%27bold%27 font-family=%27sans-serif%27%3E" + encodeURIComponent(inicial) + "%3C/text%3E%3C/svg%3E";
                 const activo = constructorActivo && constructorActivo.id === c.id;
                 html += `<button class="chip-constructor ${activo ? 'activo' : ''}" data-id="${c.id}">
-                    <img src="${foto}" onerror="this.src='https://placehold.co/40x40/c0392b/white?text=${inicial}'">
+                    <img src="${foto}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 40 40%27%3E%3Crect fill=%27%23c0392b%27 width=%2740%27 height=%2740%27/%3E%3Ctext x=%2720%27 y=%2726%27 text-anchor=%27middle%27 fill=%27white%27 font-size=%2718%27 font-weight=%27bold%27 font-family=%27sans-serif%27%3E${inicial}%3C/text%3E%3C/svg%3E'">
                     <span>${c.nombre}</span>
                 </button>`;
             });
@@ -91,10 +91,10 @@
         html += '<div class="todos-section"><span class="fav-label">Todos los constructores</span><div class="constructor-chips">';
         ordenados.forEach(c => {
             const inicial = c.nombre ? c.nombre.charAt(0).toUpperCase() : '?';
-            const foto = c.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
+            const foto = c.foto || "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 40 40%27%3E%3Crect fill=%27%23c0392b%27 width=%2740%27 height=%2740%27/%3E%3Ctext x=%2720%27 y=%2726%27 text-anchor=%27middle%27 fill=%27white%27 font-size=%2718%27 font-weight=%27bold%27 font-family=%27sans-serif%27%3E" + encodeURIComponent(inicial) + "%3C/text%3E%3C/svg%3E";
             const activo = constructorActivo && constructorActivo.id === c.id;
             html += `<button class="chip-constructor ${activo ? 'activo' : ''}" data-id="${c.id}">
-                <img src="${foto}" onerror="this.src='https://placehold.co/40x40/c0392b/white?text=${inicial}'">
+                <img src="${foto}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 40 40%27%3E%3Crect fill=%27%23c0392b%27 width=%2740%27 height=%2740%27/%3E%3Ctext x=%2720%27 y=%2726%27 text-anchor=%27middle%27 fill=%27white%27 font-size=%2718%27 font-weight=%27bold%27 font-family=%27sans-serif%27%3E${inicial}%3C/text%3E%3C/svg%3E'">
                 <span>${c.nombre}</span>
             </button>`;
         });
@@ -118,7 +118,7 @@
 
         const url = new URL(window.location);
         url.searchParams.set('constructor', c.id);
-        window.history.replaceState({}, '', url);
+        window.history.pushState({}, '', url);
 
         const header = document.getElementById('catalogoConstructor');
         if (header) header.textContent = 'Servicios de ' + c.nombre;
@@ -280,7 +280,7 @@
         const toast = document.getElementById('toastConfirmacion');
         if (toast) {
             const texto = cantidad > 1
-                ? `Agregados ${cantidad} ${item.precio_m2 ? 'm²' : 'mL'} de ${item.nombre}`
+                    ? `Agregados ${cantidad} ${item.precio_m2 ? 'm²' : (item.precio_mL ? 'mL' : '')} de ${item.nombre}`
                 : `Agregado ${item.nombre} al presupuesto`;
             toast.textContent = texto;
             toast.classList.add('show');

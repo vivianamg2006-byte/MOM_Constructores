@@ -2,6 +2,7 @@
 (function () {
 
     const STORAGE_PREFIX = 'mom_galeria_';
+    const MAX_FOTOS = 3;
 
     function obtenerGaleria(id) {
         try { return JSON.parse(localStorage.getItem(STORAGE_PREFIX + id) || '[]'); }
@@ -55,7 +56,7 @@
             +   '<label id="galeriaUploadLabel" style="display:flex;flex-direction:column;align-items:center;gap:8px;border:2px dashed #c0392b;border-radius:12px;padding:20px;cursor:pointer;background:#fff5f5;">'
             +     '<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#c0392b" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>'
             +     '<span style="color:#c0392b;font-weight:600;font-size:0.9rem;">Subir fotos de trabajos</span>'
-            +     '<span style="color:#aaa;font-size:0.78rem;">JPG, PNG o WebP \u00b7 M\u00e1x. 5 MB</span>'
+            +     '<span style="color:#aaa;font-size:0.78rem;">JPG, PNG o WebP \u00b7 M\u00e1x. 3 im\u00e1genes</span>'
             +     '<input id="galeriaFileInput" type="file" accept="image/*" multiple style="display:none;">'
             +   '</label>'
             +   '<p id="galeriaUploadError" style="color:#c62828;font-size:0.82rem;margin-top:6px;display:none;text-align:center;"></p>'
@@ -156,6 +157,19 @@
         errorEl.style.display = 'none';
         var archivos = Array.from(e.target.files);
         if (!archivos.length) return;
+        var actuales = obtenerGaleria(idActivo);
+        if (actuales.length >= MAX_FOTOS) {
+            errorEl.textContent = 'Ya tienes ' + MAX_FOTOS + ' im\u00e1genes. Elimina alguna para subir otra.';
+            errorEl.style.display = 'block';
+            e.target.value = '';
+            return;
+        }
+        var cupo = MAX_FOTOS - actuales.length;
+        if (archivos.length > cupo) {
+            errorEl.textContent = 'Solo puedes subir ' + cupo + ' imagen(es) m\u00e1s (m\u00e1ximo ' + MAX_FOTOS + ').';
+            errorEl.style.display = 'block';
+            archivos = archivos.slice(0, cupo);
+        }
         var procesados = 0, errores = [];
         archivos.forEach(function (archivo) {
             if (!archivo.type.startsWith('image/')) {

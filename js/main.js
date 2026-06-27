@@ -1,9 +1,28 @@
-// Lista global de todos los constructores cargados desde el JSON
+// Lista global de todos los constructores
 let todosLosConstructores = [];
+
+// Carga constructores creados por usuarios desde localStorage
+function cargarConstructoresUsuario() {
+    try { return JSON.parse(localStorage.getItem('mom_constructores_usuario') || '[]'); }
+    catch { return []; }
+}
+
+function guardarConstructoresUsuario(lista) {
+    localStorage.setItem('mom_constructores_usuario', JSON.stringify(lista));
+}
+
 // Promesa que precarga los constructores al iniciar la aplicación
 const constructoresReady = fetch('data/constructores.json')
     .then(r => r.json())
-    .then(data => { todosLosConstructores = data; })
+    .then(data => {
+        todosLosConstructores = data;
+        var usuarios = cargarConstructoresUsuario();
+        usuarios.forEach(function(u) {
+            if (!todosLosConstructores.some(function(c) { return c.id === u.id; })) {
+                todosLosConstructores.push(u);
+            }
+        });
+    })
     .catch(e => console.error('Error cargando constructores:', e));
 
 // Obtiene el ID único del usuario desde la sesión en localStorage; devuelve 'guest' si no hay sesión
@@ -91,12 +110,24 @@ function actualizarModalFavoritos() {
 // Expone funciones al ámbito global para usarlas desde el HTML
 window.toggleFavorito = toggleFavorito;
 window.actualizarModalFavoritos = actualizarModalFavoritos;
+window.guardarConstructoresUsuario = guardarConstructoresUsuario;
+window.cargarConstructoresUsuario = cargarConstructoresUsuario;
 
 // Al cargar el DOM, actualiza el badge de favoritos y carga las categorías
 document.addEventListener('DOMContentLoaded', () => {
     actualizarBadgeFav();
     cargarCategorias();
+    ajustarPaddingHeader();
 });
+
+window.addEventListener('resize', ajustarPaddingHeader);
+
+function ajustarPaddingHeader() {
+    var header = document.querySelector('.site-header');
+    if (!header) return;
+    var h = header.offsetHeight;
+    if (h > 0) document.body.style.paddingTop = h + 'px';
+}
 
 // Carga las categorías de servicios desde presupuestos.json y renderiza tarjetas clickeables
 async function cargarCategorias() {

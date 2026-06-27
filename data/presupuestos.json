@@ -75,14 +75,14 @@
           "nombre": "Punto Eléctrico",
           "precio": 15000,
           "descripcion": "Instalación de punto eléctrico con tubería y cableado.",
-          "imagen": "assets/"
+          "imagen": "assets/images/ordenado.jpeg"
         },
         {
           "id": 8,
-          "nombre": "Punto de Luz",
+          "nombre": "Cableado en PVC",
           "precio": 12000,
-          "descripcion": "Instalación de punto de luz con apagador y boquilla.",
-          "imagen": "assets/"
+          "descripcion": "Cableado con material aislante pvc.",
+          "imagen": "assets/images/pvc.jpeg"
         },
         {
           "id": 9,
@@ -100,24 +100,24 @@
       "items": [
         {
           "id": 10,
-          "nombre": "Puerta Metálica",
+          "nombre": "Cama Metálica",
           "precio": 120000,
-          "descripcion": "Puerta de hierro forjado con diseño personalizado.",
-          "imagen": "assets/"
+          "descripcion": "Cama metálica con diseño personalizado.",
+          "imagen": "assets/images/cama.jpeg"
         },
         {
           "id": 11,
-          "nombre": "Baranda Metálica",
+          "nombre": "Verja Metálica",
           "precio_mL": 35000,
-          "descripcion": "Baranda de hierro para escaleras o balcones (por metro lineal).",
-          "imagen": "assets/"
+          "descripcion": "Baranda de hierro para verjas de ventanas o puertas (por metro lineal).",
+          "imagen": "assets/images/ventana.jpeg"
         },
         {
           "id": 12,
-          "nombre": "Portón Corredizo",
+          "nombre": "Prevista para techo",
           "precio": 250000,
-          "descripcion": "Portón metálico corredizo con rieles y rodamientos.",
-          "imagen": "assets/"
+          "descripcion": "Perlín soldado para prevista del techo.",
+          "imagen": "assets/images/techoSoldado3.jpeg"
         }
       ]
     },
@@ -131,21 +131,21 @@
           "nombre": "Diseño de Jardín",
           "precio_m2": 5500,
           "descripcion": "Diseño y siembra de jardín con plantas ornamentales.",
-          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Diseno+Jardin"
+          "imagen": "assets/images/diseñoJardin.jpg"
         },
         {
           "id": 14,
           "nombre": "Césped Sintético",
           "precio_m2": 8000,
           "descripcion": "Instalación de césped sintético con base preparada.",
-          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Cesped"
+          "imagen": "assets/images/cespedSintetico.jpeg"
         },
         {
           "id": 15,
           "nombre": "Sistema de Riego",
           "precio": 45000,
           "descripcion": "Instalación de sistema de riego automático por aspersión.",
-          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Riego"
+          "imagen": "assets/images/sistemaRiego.jpg"
         }
       ]
     },
@@ -159,21 +159,21 @@
           "nombre": "Mampostería",
           "precio_m2": 18000,
           "descripcion": "Construcción de paredes de bloque con refuerzo.",
-          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Mamposteria"
+          "imagen": "assets/images/mamposteria.jpg"
         },
         {
           "id": 17,
           "nombre": "Contrapiso",
           "precio_m2": 9500,
           "descripcion": "Contrapiso de concreto con malla electrosoldada.",
-          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Contrapiso"
+          "imagen": "assets/images/malla.jpg"
         },
         {
           "id": 18,
           "nombre": "Encofrado de Columnas",
           "precio": 65000,
           "descripcion": "Encofrado y fundición de columna de concreto armado.",
-          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Columnas"
+          "imagen": "assets/images/armada.jpg"
         }
       ]
     },
@@ -186,22 +186,22 @@
           "id": 19,
           "nombre": "Punto de Agua",
           "precio": 25000,
-          "descripcion": "Instalación de punto de agua fría/caliente con tubería PVC.",
-          "imagen": "https://via.placeholder.com/300x200/c0392b/white?text=Punto+Agua"
+          "descripcion": "Instalación de punto de agua con tubería PVC.",
+          "imagen": "assets/images/fontaneria.jpg"
         },
         {
           "id": 20,
           "nombre": "Punto de Desagüe",
           "precio": 22000,
           "descripcion": "Instalación de punto de desagüe con tubería de 4 pulgadas.",
-          "imagen": "https://via.placeholder.com/300x200/a93226/white?text=Desague"
+          "imagen": "assets/images/desague.jpg"
         },
         {
           "id": 21,
           "nombre": "Tubería General",
           "precio_mL": 12000,
           "descripcion": "Tubería de PVC para agua potable (por metro lineal).",
-          "imagen": "https://via.placeholder.com/300x200/8b0000/white?text=Tueria"
+          "imagen": "assets/images/tuberia.jpg"
         }
       ]
     }

@@ -44,6 +44,11 @@ body {
     gap: 20px;
 }
 
+.logo-link {
+    text-decoration: none;
+    color: inherit;
+}
+
 .logo-container {
     display: flex;
     align-items: center;
@@ -674,7 +679,7 @@ footer a:hover {
 
 @media (max-width: 768px) {
     body {
-        padding-top: 190px;
+        padding-top: 210px;
     }
 
     .main-header .container {
@@ -753,7 +758,7 @@ footer a:hover {
 
 @media (max-width: 600px) {
     body {
-        padding-top: 175px;
+        padding-top: 200px;
     }
 
     .logo-img img {
@@ -785,7 +790,7 @@ footer a:hover {
 
 @media (max-width: 480px) {
     body {
-        padding-top: 165px;
+        padding-top: 280px;
     }
 
     .logo-img img {

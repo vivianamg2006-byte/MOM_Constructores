@@ -186,6 +186,25 @@
             transform: scale(1.05);
         }
 
+        .btn-whatsapp-const {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #25d366;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.82rem;
+            transition: all 0.3s ease;
+        }
+        .btn-whatsapp-const:hover {
+            background-color: #1da851;
+            transform: scale(1.05);
+            color: white;
+        }
+
         .no-resultados {
             text-align: center;
             padding: 60px 20px;
@@ -214,6 +233,10 @@
                 justify-content: center;
                 align-items: center;
                 gap: 10px;
+            }
+            .btn-whatsapp-const {
+                font-size: 0.78rem;
+                padding: 6px 14px;
             }
         }
 
@@ -261,6 +284,7 @@
     <header class="site-header">
         <div class="main-header">
             <div class="container">
+                <a href="index.html" class="logo-link">
                 <div class="logo-container">
                     <div class="logo-img">
                         <img src="assets/images/logo.jpeg" alt="MOM Logo">
@@ -270,6 +294,7 @@
                         <p>Maestro Obra Masís</p>
                     </div>
                 </div>
+                </a>
                 <div class="header-actions">
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Buscar por especialidad, provincia..." />
@@ -301,7 +326,7 @@
     </button>
 
     <div class="perfil hidden" id="userProfile">
-        <img id="profileImg" src="https://placehold.co/40x40/c0392b/white?text=?" alt="Perfil">
+        <img id="profileImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%23c0392b' width='40' height='40'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-weight='bold' font-family='sans-serif'%3E%3F%3C/text%3E%3C/svg%3E" alt="Perfil">
         <div>
             <span id="profileName">Usuario</span>
             <div class="nivel" id="profileNivel">Nivel 1</div>
@@ -371,6 +396,7 @@
 
     <script src="js/main.js"></script>
     <script src="js/constructores.js"></script>
+    <script src="js/galeria.js"></script>
 
     <script>
         (function() {
@@ -396,7 +422,7 @@
 
                 // Genera la imagen de perfil con la inicial del nombre
                 const inicial = sesion.nombre.charAt(0).toUpperCase();
-                profileImg.src = sesion.foto || 'https://placehold.co/40x40/c0392b/white?text=' + inicial;
+                profileImg.src = sesion.foto || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%23c0392b' width='40' height='40'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-weight='bold' font-family='sans-serif'%3E" + encodeURIComponent(inicial) + "%3C/text%3E%3C/svg%3E";
 
                 // Al hacer clic en el perfil, abre el modal con saludo y rol
                 userProfile.onclick = function() {
