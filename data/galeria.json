@@ -1,0 +1,52 @@
+﻿{
+  "1": [
+    { "src": "assets/images/construccion.jpg", "caption": "Construcción de vivienda" },
+    { "src": "assets/images/cieloRaso.jpg", "caption": "Instalación de cielo raso" },
+    { "src": "assets/images/fontaneria.jpg", "caption": "Trabajo de fontanería" }
+  ],
+  "2": [
+    { "src": "assets/images/tableroElectrico.jpeg", "caption": "Tablero eléctrico residencial" },
+    { "src": "assets/images/breaker.jpeg", "caption": "Instalación de breakers" },
+    { "src": "assets/images/cajaElectrica.jpeg", "caption": "Caja eléctrica general" }
+  ],
+  "3": [
+    { "src": "assets/images/perlinSoldado.jpeg", "caption": "Soldadura de perlín en techo" },
+    { "src": "assets/images/techoSoldado3.jpeg", "caption": "Estructura de techo soldada" },
+    { "src": "assets/images/verjas.jpeg", "caption": "Fabricación de verjas metálicas" }
+  ],
+  "4": [
+    { "src": "assets/images/cespedSintetico.jpeg", "caption": "Instalación de césped sintético" },
+    { "src": "assets/images/sistemaRiego.jpg", "caption": "Sistema de riego automático" },
+    { "src": "assets/images/diseñoJardin.jpg", "caption": "Diseño de jardín residencial" }
+  ],
+  "5": [
+    { "src": "assets/images/mamposteria.jpg", "caption": "Trabajo de mampostería" },
+    { "src": "assets/images/repelloFino.jpg", "caption": "Repello fino de pared" },
+    { "src": "assets/images/pegandoCeramica.jpg", "caption": "Colocación de cerámica" }
+  ],
+  "6": [
+    { "src": "assets/images/tuberia.jpg", "caption": "Instalación de tubería" },
+    { "src": "assets/images/tubosPvc.jpeg", "caption": "Tubería PVC para agua potable" },
+    { "src": "assets/images/alcantarillado.jpg", "caption": "Sistema de alcantarillado" }
+  ],
+  "7": [
+    { "src": "assets/images/esqueleto.jpg", "caption": "Estructura de madera para techo" },
+    { "src": "assets/images/techoPuesto.jpg", "caption": "Techado completo" },
+    { "src": "assets/images/agregacionTecho.jpg", "caption": "Agregación de techo" }
+  ],
+  "8": [
+    { "src": "assets/images/pintandoPared.jpg", "caption": "Pintura de pared interior" },
+    { "src": "assets/images/acabadoCieloRaso.jpg", "caption": "Acabado de cielo raso" },
+    { "src": "assets/images/liso.jpg", "caption": "Pared con acabado liso" }
+  ],
+  "9": [
+    { "src": "assets/images/electricidad2.jpeg", "caption": "Instalación eléctrica general" },
+    { "src": "assets/images/centroDeCarga.jpeg", "caption": "Centro de carga eléctrica" },
+    { "src": "assets/images/conexiones.jpeg", "caption": "Conexiones eléctricas" }
+  ],
+  "10": [
+    { "src": "assets/images/diseñoJardin.jpg", "caption": "Diseño paisajista" },
+    { "src": "assets/images/cespedSintetico.jpeg", "caption": "Colocación de césped" },
+    { "src": "assets/images/armada.jpg", "caption": "Estructura para jardín" }
+  ]
+}

@@ -281,29 +281,6 @@
             opacity: 0.4;
         }
 
-        .toast-tarjeta {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #2e7d32;
-            color: white;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            opacity: 0;
-            transition: all 0.4s ease;
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        .toast-tarjeta.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
         .rating-interactivo {
             display: flex;
             flex-direction: column;
@@ -424,12 +401,12 @@
             <button class="modal-close" onclick="closeModal('perfilModal')">&times;</button>
             <h3 id="modal-saludo">Mi perfil</h3>
             <p class="modal-desc" id="modal-rol-desc"></p>
-            <button class="btn-submit" onclick="cerrarSesion()" style="background:#555;">Cerrar sesión</button>
+            <button class="btn-submit btn-secundario" onclick="cerrarSesion()">Cerrar sesión</button>
         </div>
     </div>
 
     <main>
-        <section class="hero" style="padding:40px 0;">
+        <section class="hero hero-padding-sm">
             <div class="container">
                 <div class="tarjeta-header">
                     <h1>Tarjeta MOM</h1>
@@ -448,25 +425,26 @@
                     </div>
                 </div>
 
-                <div class="rating-interactivo" id="ratingSection" style="display:none;max-width:600px;margin:30px auto 0;background:white;border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,0.08);padding:24px;">
+                <div class="rating-interactivo hidden" id="ratingSection">
                     <label>Califica a este constructor</label>
                     <div class="rating-estrellas" id="ratingEstrellas"></div>
                     <div class="rating-mensaje" id="ratingMensaje">Haz clic en una estrella para calificar</div>
                 </div>
 
-                <div id="tarjetaGaleriaSection" style="display:none;max-width:600px;margin:30px auto 0;background:white;border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,0.08);padding:24px;">
-                    <h2 style="color:#c0392b;font-size:1.2rem;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #ffebee;">Galería de trabajos <span style="color:#c62828;font-size:0.8rem;">(Obligatorio - 3 imágenes)</span></h2>
-                    <div id="tarjetaGaleriaUpload" style="margin-bottom:16px;">
-                        <label id="tarjetaGaleriaLabel" style="display:flex;flex-direction:column;align-items:center;gap:8px;border:2px dashed #c0392b;border-radius:12px;padding:16px;cursor:pointer;background:#fff5f5;">
+                <div class="tarjeta-galeria-section" id="tarjetaGaleriaSection">
+                    <h2>Galería de trabajos <span class="obligatorio">(Obligatorio - 3 imágenes)</span></h2>
+                    <div class="tarjeta-galeria-upload" id="tarjetaGaleriaUpload">
+                        <input id="tarjetaGaleriaTituloInput" type="text" placeholder="Título del trabajo (opcional)..." maxlength="60" class="tarjeta-galeria-titulo-input">
+                        <label id="tarjetaGaleriaLabel" class="tarjeta-galeria-label">
                             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#c0392b" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                            <span style="color:#c0392b;font-weight:600;font-size:0.9rem;">Subir fotos de trabajos realizados</span>
-                            <span style="color:#aaa;font-size:0.78rem;">Debes subir exactamente 3 imágenes · JPG, PNG</span>
+                            <span class="tarjeta-galeria-label-text">Subir fotos de trabajos realizados</span>
+                            <span class="tarjeta-galeria-label-hint">Debes subir exactamente 3 imágenes · JPG, PNG</span>
                             <input id="tarjetaGaleriaInput" type="file" accept="image/*" multiple style="display:none;">
                         </label>
-                        <p id="tarjetaGaleriaError" style="color:#c62828;font-size:0.82rem;margin-top:6px;display:none;text-align:center;"></p>
+                        <p id="tarjetaGaleriaError" class="tarjeta-galeria-error"></p>
                     </div>
-                    <div id="tarjetaGaleriaGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;"></div>
-                    <p id="tarjetaGaleriaVacia" style="text-align:center;color:#aaa;font-size:0.9rem;padding:20px 0;display:none;">Aún no has subido fotos de trabajos.</p>
+                    <div id="tarjetaGaleriaGrid" class="tarjeta-galeria-grid"></div>
+                    <p id="tarjetaGaleriaVacia" class="tarjeta-galeria-vacia">Aún no has subido fotos de trabajos.</p>
                 </div>
             </div>
         </section>
@@ -548,7 +526,7 @@
         var t = document.getElementById('toastTarjeta');
         if (!t) return;
         t.textContent = msg;
-        t.style.background = esError ? '#c62828' : '#2e7d32';
+        t.classList.toggle('error', !!esError);
         t.classList.add('show');
         setTimeout(function() { t.classList.remove('show'); }, 3500);
     }
@@ -620,7 +598,6 @@
             var lblFoto = document.createElement('span');
             lblFoto.className = 'file-label';
             lblFoto.textContent = ' (imagen cargada)';
-            lblFoto.style.cssText = 'font-size:0.8rem;color:#2e7d32;font-weight:600;margin-left:6px;';
             grupoFoto.appendChild(lblFoto);
         }
         inputFoto.addEventListener('change', function(e) {
@@ -634,7 +611,6 @@
                     var lbl = document.createElement('span');
                     lbl.className = 'file-label';
                     lbl.textContent = ' (imagen cargada)';
-                    lbl.style.cssText = 'font-size:0.8rem;color:#2e7d32;font-weight:600;margin-left:6px;';
                     grupoFoto.appendChild(lbl);
                 }
             };
@@ -735,7 +711,8 @@
                 calificacion: datos ? (datos.calificacion || 0) : 0,
                 instagram: data.instagram || '',
                 facebook: data.facebook || '',
-                whatsapp: data.whatsapp || ''
+                whatsapp: data.whatsapp || '',
+                galeria: fotosGuardadas
             };
 
             var lista = cargarConstructoresUsuario();
@@ -786,13 +763,13 @@
         if (seccionGaleria) seccionGaleria.style.display = 'none';
         var contenedor = document.getElementById('tarjetaForm');
         var div = document.createElement('div');
-        div.style.cssText = 'text-align:center;padding:32px 16px;';
+        div.className = 'tarjeta-exito';
         div.innerHTML =
-            '<div style="font-size:3rem;margin-bottom:12px;">&#10004;&#65039;</div>' +
-            '<h3 style="color:#2e7d32;margin:0 0 8px 0;">Tarjeta creada exitosamente</h3>' +
-            '<p style="color:#666;margin:0 0 20px 0;">' + datos.nombre + ' ya aparece en la lista de constructores.</p>' +
+            '<div class="tarjeta-exito-icono">&#10004;&#65039;</div>' +
+            '<h3 class="tarjeta-exito-titulo">Tarjeta creada exitosamente</h3>' +
+            '<p class="tarjeta-exito-desc">' + datos.nombre + ' ya aparece en la lista de constructores.</p>' +
             '<a href="constructores.html" class="btn-guardar" style="display:inline-block;text-decoration:none;margin-right:10px;">Ver constructores</a>' +
-            '<button id="btnCrearOtra" class="btn-guardar" style="background:#666;display:inline-block;">Crear otra tarjeta</button>';
+            '<button id="btnCrearOtra" class="btn-guardar btn-secundario" style="display:inline-block;">Crear otra tarjeta</button>';
         contenedor.innerHTML = '';
         contenedor.appendChild(div);
         document.getElementById('btnCrearOtra').addEventListener('click', function() {
@@ -815,14 +792,22 @@
         if (vacia) vacia.style.display = 'none';
         fotos.forEach(function(foto, idx) {
             var wrapper = document.createElement('div');
-            wrapper.style.cssText = 'position:relative;border-radius:8px;overflow:hidden;background:#f5f5f5;';
+            wrapper.className = 'galeria-img-wrapper';
             var img = document.createElement('img');
             img.src = foto.src;
-            img.style.cssText = 'width:100%;height:100px;object-fit:cover;display:block;border-radius:6px;';
+            img.alt = foto.caption || '';
+            img.style.cssText = 'width:100%;height:150px;object-fit:cover;display:block;border-radius:6px;';
             wrapper.appendChild(img);
+            if (foto.caption) {
+                var cap = document.createElement('p');
+                cap.textContent = foto.caption;
+                cap.className = 'galeria-caption';
+                cap.style.fontSize = '0.82rem';
+                wrapper.appendChild(cap);
+            }
             var btnDel = document.createElement('button');
+            btnDel.className = 'galeria-delete-btn';
             btnDel.innerHTML = '&times;';
-            btnDel.style.cssText = 'position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.55);color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;';
             (function(i) {
                 btnDel.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -848,11 +833,11 @@
             if (fotos.length < 3) {
                 errorEl.textContent = 'Faltan ' + (3 - fotos.length) + ' imagen(es) por subir (m\u00ednimo 3).';
                 errorEl.style.display = 'block';
-                errorEl.style.color = '#c62828';
+                errorEl.classList.remove('success');
             } else {
                 errorEl.textContent = '\u2713 3 im\u00e1genes listas';
                 errorEl.style.display = 'block';
-                errorEl.style.color = '#2e7d32';
+                errorEl.classList.add('success');
             }
         }
     }
@@ -863,6 +848,8 @@
         inputGaleria.addEventListener('change', function(e) {
             var errorEl = document.getElementById('tarjetaGaleriaError');
             if (errorEl) errorEl.style.display = 'none';
+            var tituloInput = document.getElementById('tarjetaGaleriaTituloInput');
+            var titulo = tituloInput ? tituloInput.value.trim() : '';
             var archivos = Array.from(e.target.files);
             if (!archivos.length) return;
             var actuales = [];
@@ -894,9 +881,10 @@
                 reader.onload = function(ev) {
                     var f = [];
                     try { f = JSON.parse(localStorage.getItem('mom_galeria_temp') || '[]'); } catch {}
-                    f.push({ src: ev.target.result, caption: '', fecha: new Date().toLocaleDateString('es-CR') });
+                    var captionFinal = titulo || archivo.name.replace(/\.[^.]+$/, '');
+                    f.push({ src: ev.target.result, caption: captionFinal, fecha: new Date().toLocaleDateString('es-CR') });
                     localStorage.setItem('mom_galeria_temp', JSON.stringify(f));
-                    if (++procesados === archivos.length) { e.target.value = ''; renderizarGaleriaTemp(); }
+                    if (++procesados === archivos.length) { e.target.value = ''; if (tituloInput) tituloInput.value = ''; renderizarGaleriaTemp(); }
                 };
                 reader.readAsDataURL(archivo);
             });
@@ -923,6 +911,9 @@
         if (datos) {
             var galeriaExiste = [];
             try { galeriaExiste = JSON.parse(localStorage.getItem('mom_galeria_' + datos.id) || '[]'); } catch {}
+            if (galeriaExiste.length === 0 && datos.galeria && datos.galeria.length > 0) {
+                galeriaExiste = datos.galeria;
+            }
             if (galeriaExiste.length > 0) {
                 localStorage.setItem('mom_galeria_temp', JSON.stringify(galeriaExiste));
                 renderizarGaleriaTemp();

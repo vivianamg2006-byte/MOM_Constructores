@@ -1,24 +1,21 @@
-// IIFE: encapsula el módulo del carrito
+// carrito.js — Carrito de presupuestos y generación de cotización
+// Permite ver, modificar cantidades, eliminar items, imprimir presupuesto y contactar vendedores por WhatsApp.
+// Los datos se persisten en localStorage con la clave 'carrito_presupuesto'.
 (function () {
-    // Clave para guardar/leer el carrito desde localStorage
     const STORAGE_KEY = 'carrito_presupuesto';
 
-    // Obtiene el carrito del localStorage
     function obtenerCarrito() {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     }
 
-    // Guarda el carrito en localStorage
     function guardarCarrito(items) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     }
 
-    // Formatea un número a moneda local (CRC)
     function formatear(num) {
         return num.toLocaleString('es-CR');
     }
 
-    // Obtiene el nombre del cliente desde la sesión
     function obtenerNombreCliente() {
         try {
             const s = JSON.parse(localStorage.getItem('mom_sesion') || '{}');
@@ -26,7 +23,6 @@
         } catch { return 'Cliente'; }
     }
 
-    // Busca el teléfono/whatsapp de un constructor por ID
     function obtenerTelefonoConstructor(id) {
         if (typeof todosLosConstructores === 'undefined') return null;
         var c = todosLosConstructores.find(function(x) { return x.id === id; });
@@ -34,7 +30,9 @@
         return c.whatsapp || c.contacto || null;
     }
 
-    // Renderiza el contenido del carrito en el DOM
+    // renderizarCarrito — Construye la vista completa del carrito en el DOM
+    // Agrupa los items por constructor, genera HTML con cantidades editables,
+    // subtotales, enlaces a WhatsApp, y registra los event listeners.
     function renderizarCarrito() {
         const items = obtenerCarrito();
         const contenedor = document.getElementById('itemsCarrito');
@@ -63,7 +61,7 @@
         let totalCantidad = 0;
         let totalPrecio = 0;
 
-        // Agrupa los items por constructor
+        // Agrupa los items por constructor para mostrar secciones separadas
         const grupos = {};
         items.forEach((item, index) => {
             const key = item.constructorId || 'sin_constructor';
@@ -79,7 +77,7 @@
             const telefono = grupo.constructorId ? obtenerTelefonoConstructor(parseInt(grupo.constructorId)) : null;
             let html = `<div class="grupo-carrito">`;
             if (key !== 'sin_constructor') {
-                // Construye la lista de productos para el mensaje de WhatsApp
+                // Genera enlace a WhatsApp con los datos del cliente y productos listados
                 var listaProductos = grupo.items.map(function(i) {
                     return i.item.cantidad + 'x ' + i.item.nombre;
                 }).join(', ');
@@ -93,7 +91,7 @@
                     </a>` : ''}
                 </div>`;
             }
-            // Genera el HTML para cada item del grupo
+            // Genera una fila por cada item: nombre, precio unitario, cantidad ajustable, subtotal, botón eliminar
             grupo.items.forEach(({ item, index }) => {
                 const subtotal = item.cantidad * item.precio;
                 totalCantidad += item.cantidad;
@@ -131,11 +129,10 @@
 
         contenedor.innerHTML = gruposHtml.join('');
 
-        // Actualiza los totales en el DOM
         document.getElementById('totalMetros').textContent = formatear(totalCantidad);
         document.getElementById('totalPrecio').textContent = formatear(totalPrecio);
 
-        // Event listeners para botones de cambio de cantidad (+/−)
+        // Botones +/−: ajustan cantidad con límite mínimo de 1
         document.querySelectorAll('.btn-cambio').forEach(btn => {
             btn.addEventListener('click', function () {
                 const idx = parseInt(this.dataset.index);
@@ -147,7 +144,7 @@
             });
         });
 
-        // Event listeners para cambio manual de cantidad en input
+        // Input manual: actualiza al perder foco, con límites 1-1000
         document.querySelectorAll('.input-metros-item').forEach(input => {
             input.addEventListener('change', function () {
                 const idx = parseInt(this.dataset.index);
@@ -161,7 +158,7 @@
             });
         });
 
-        // Event listeners para botones de eliminar item
+        // Botón ×: elimina el item del carrito
         document.querySelectorAll('.btn-eliminar').forEach(btn => {
             btn.addEventListener('click', function () {
                 const idx = parseInt(this.dataset.index);
@@ -181,7 +178,9 @@
         }
     }
 
-    // Imprime el presupuesto con un formato bonito y profesional
+    // imprimirPresupuesto — Abre una ventana de impresión con formato profesional
+    // Construye un documento HTML completo con tabla de items agrupados por constructor,
+    // encabezado con datos del cliente, subtotales por grupo y total general.
     function imprimirPresupuesto() {
         var items = obtenerCarrito();
         if (!items.length) return;
@@ -209,6 +208,7 @@
         html += '<div class=\"cliente-info\"><strong>Cliente:</strong> ' + nombreCliente + '<br><strong>Fecha:</strong> ' + fecha + '</div>';
         html += '<hr style=\"border:none;border-top:2px solid #c0392b;margin-bottom:20px;\">';
 
+        // Agrupa items por constructor para mostrar secciones independientes
         var grupos = {};
         items.forEach(function(item) {
             var key = item.constructorId || 'sin_constructor';

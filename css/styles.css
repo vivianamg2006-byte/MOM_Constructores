@@ -400,17 +400,28 @@ body {
     color: #444;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 10px 14px;
-    border: 1px solid #ccc;
+    border: 1.5px solid #ddd;
     border-radius: 8px;
     font-size: 0.95rem;
     outline: none;
     transition: border-color 0.2s;
+    font-family: inherit;
+    background: white;
 }
 
-.form-group input:focus {
+.form-group textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
     border-color: #c0392b;
 }
 
@@ -933,61 +944,470 @@ footer a:hover {
     background: #fff5f5;
 }
 
-/* === MODAL EMERGENTE (GALERÍA) === */
-.modal-overlay {
+/* === MODAL DE GALERÍA (creado por galeria.js) === */
+
+.galeria-modal-box {
+    max-width: 850px;
+    width: min(95%, 850px);
+    padding: 28px 24px;
+}
+
+.galeria-titulo {
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+}
+
+.galeria-subtitulo {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.galeria-upload-zona {
+    display: none;
+    margin-bottom: 20px;
+}
+
+.galeria-upload-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.galeria-upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: 2px dashed #c0392b;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    background: #fff5f5;
+}
+
+.galeria-upload-label:hover {
+    background: #ffebee;
+}
+
+.galeria-upload-label-text {
+    color: #c0392b;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.galeria-upload-label-hint {
+    color: #aaa;
+    font-size: 0.78rem;
+}
+
+.galeria-upload-error {
+    color: #c62828;
+    font-size: 0.82rem;
+    margin-top: 6px;
+    display: none;
+    text-align: center;
+}
+
+.galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.galeria-vacia {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.95rem;
+    padding: 30px 0;
+    display: none;
+}
+
+.galeria-img-wrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.galeria-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.galeria-img:hover {
+    transform: scale(1.04);
+}
+
+.galeria-caption {
+    font-size: 0.85rem;
+    color: #333;
+    padding: 6px 8px;
+    background: white;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+.galeria-delete-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+}
+
+.galeria-delete-btn:hover {
+    background: rgba(0,0,0,0.75);
+}
+
+.galeria-like-btn {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: rgba(0,0,0,0.35);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.galeria-like-btn:hover {
+    background: rgba(0,0,0,0.55);
+}
+
+.galeria-like-btn.liked {
+    background: rgba(231,76,60,0.25);
+}
+
+/* === LIGHTBOX (galeria.js) === */
+
+.galeria-lightbox {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
+    background: rgba(0,0,0,0.88);
+    z-index: 3500;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 1000;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.modal-overlay.modal-active {
-    opacity: 1;
-    pointer-events: auto;
+.galeria-lightbox.open {
+    display: flex;
 }
 
-.modal-content {
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    max-width: 600px;
-    width: 90%;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    max-height: 85vh;
-    overflow-y: auto;
-}
-
-.close-modal {
+.galeria-lightbox-close {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 18px;
+    right: 22px;
     background: none;
     border: none;
-    font-size: 20px;
+    color: white;
+    font-size: 2.2rem;
     cursor: pointer;
-    color: #333;
 }
 
-.modal-galeria-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+.galeria-lightbox-close:hover {
+    color: #ddd;
 }
 
-.modal-galeria-img {
+.galeria-lightbox-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.galeria-lightbox-caption {
+    color: #ddd;
+    font-size: 0.88rem;
+    text-align: center;
+    padding: 0 20px;
+    max-width: 600px;
+}
+
+/* === RATING MODAL (constructores.js) === */
+
+.rating-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 90px;
-    object-fit: cover;
-    border-radius: 4px;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 3000;
+    justify-content: center;
+    align-items: center;
+}
+
+.rating-modal.open {
+    display: flex;
+}
+
+.rating-modal-box {
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    text-align: center;
+    min-width: 260px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.rating-modal-title {
+    color: #c0392b;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+}
+
+.rating-select {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.rating-star-btn {
+    background: none;
+    border: none;
+    font-size: 2.2rem;
+    cursor: pointer;
+    transition: color 0.15s;
+    padding: 0 3px;
+}
+
+.rating-star-btn:hover {
+    transform: scale(1.1);
+}
+
+.btn-rating-cerrar {
+    background: #c0392b;
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.btn-rating-cerrar:hover {
+    background: #a93226;
+}
+
+/* === TARJETA — TOAST === */
+
+.toast-tarjeta {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #2e7d32;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: all 0.4s ease;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.toast-tarjeta.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-tarjeta.error {
+    background: #c62828;
+}
+
+/* === TARJETA — GALERÍA UPLOAD === */
+
+.tarjeta-galeria-section {
+    display: none;
+    max-width: 600px;
+    margin: 30px auto 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    padding: 24px;
+}
+
+.tarjeta-galeria-section h2 {
+    color: #c0392b;
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ffebee;
+}
+
+.obligatorio {
+    color: #c62828;
+    font-size: 0.8rem;
+}
+
+.tarjeta-galeria-upload {
+    margin-bottom: 16px;
+}
+
+.tarjeta-galeria-titulo-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.tarjeta-galeria-titulo-input:focus {
+    border-color: #c0392b;
+}
+
+.tarjeta-galeria-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: 2px dashed #c0392b;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    background: #fff5f5;
+}
+
+.tarjeta-galeria-label:hover {
+    background: #ffebee;
+}
+
+.tarjeta-galeria-label-text {
+    color: #c0392b;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.tarjeta-galeria-label-hint {
+    color: #aaa;
+    font-size: 0.78rem;
+}
+
+.tarjeta-galeria-error {
+    color: #c62828;
+    font-size: 0.82rem;
+    margin-top: 6px;
+    display: none;
+    text-align: center;
+}
+
+.tarjeta-galeria-error.success {
+    color: #2e7d32;
+}
+
+.tarjeta-galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.tarjeta-galeria-vacia {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.9rem;
+    padding: 20px 0;
+    display: none;
+}
+
+/* === TARJETA — ARCHIVO CARGADO === */
+
+.file-label {
+    font-size: 0.8rem;
+    color: #2e7d32;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+/* === TARJETA — ÉXITO === */
+
+.tarjeta-exito {
+    text-align: center;
+    padding: 32px 16px;
+}
+
+.tarjeta-exito-icono {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+.tarjeta-exito-titulo {
+    color: #2e7d32;
+    margin: 0 0 8px 0;
+}
+
+.tarjeta-exito-desc {
+    color: #666;
+    margin: 0 0 20px 0;
+}
+
+/* === UTILITARIOS === */
+
+.btn-secundario {
+    background: #555;
+}
+
+.btn-secundario:hover {
+    background: #444;
+}
+
+.hero-padding-sm {
+    padding: 40px 0;
+}
+
+.no-click {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.text-center {
+    text-align: center;
 }

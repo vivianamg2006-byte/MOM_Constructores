@@ -1,4 +1,4 @@
-// Lista global de todos los constructores
+// Lista global de todos los constructores (cargados desde JSON + usuarios)
 let todosLosConstructores = [];
 
 // Carga constructores creados por usuarios desde localStorage
@@ -11,9 +11,22 @@ function guardarConstructoresUsuario(lista) {
     localStorage.setItem('mom_constructores_usuario', JSON.stringify(lista));
 }
 
+// fetchJSON — Wrapper que fuerza UTF-8 explícito para evitar mojibake en file:// (Windows)
+function fetchJSON(url) {
+    return fetch(url)
+        .then(function (r) { return r.blob(); })
+        .then(function (blob) {
+            return new Promise(function (resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function () { try { resolve(JSON.parse(reader.result)); } catch (e) { reject(e); } };
+                reader.onerror = reject;
+                reader.readAsText(blob, 'UTF-8');
+            });
+        });
+}
+
 // Promesa que precarga los constructores al iniciar la aplicación
-const constructoresReady = fetch('data/constructores.json')
-    .then(r => r.json())
+const constructoresReady = fetchJSON('data/constructores.json')
     .then(data => {
         todosLosConstructores = data;
         var usuarios = cargarConstructoresUsuario();
@@ -105,6 +118,23 @@ function actualizarModalFavoritos() {
             <button class="btn-eliminar-fav" onclick="toggleFavorito(${c.id})">&times;</button>
         </div>
     `).join('');
+
+    // Nota: se asigna onclick directamente para simplificar; los botones se crean dinámicamente.
+}
+
+// Obtiene el carrito de presupuestos desde localStorage
+function obtenerCarritoGlobal() {
+    try { return JSON.parse(localStorage.getItem('carrito_presupuesto') || '[]'); }
+    catch { return []; }
+}
+
+// Actualiza el contador del carrito en el header
+function actualizarContador() {
+    const span = document.getElementById('contadorCarrito');
+    if (span) {
+        const total = obtenerCarritoGlobal().reduce((s, i) => s + i.cantidad, 0);
+        span.textContent = total;
+    }
 }
 
 // Expone funciones al ámbito global para usarlas desde el HTML
@@ -112,16 +142,19 @@ window.toggleFavorito = toggleFavorito;
 window.actualizarModalFavoritos = actualizarModalFavoritos;
 window.guardarConstructoresUsuario = guardarConstructoresUsuario;
 window.cargarConstructoresUsuario = cargarConstructoresUsuario;
+window.actualizarContador = actualizarContador;
 
-// Al cargar el DOM, actualiza el badge de favoritos y carga las categorías
+// Al cargar el DOM, actualiza badge de favoritos, contador carrito y carga categorías
 document.addEventListener('DOMContentLoaded', () => {
     actualizarBadgeFav();
+    actualizarContador();
     cargarCategorias();
     ajustarPaddingHeader();
 });
 
 window.addEventListener('resize', ajustarPaddingHeader);
 
+// Ajusta el padding-top del body para que coincida con la altura del header fijo
 function ajustarPaddingHeader() {
     var header = document.querySelector('.site-header');
     if (!header) return;

@@ -1,14 +1,13 @@
-// IIFE: encapsula el módulo de constructores
+// constructores.js — Listado y tarjetas de constructores
+// Renderiza cards con datos, favoritos, calificación por estrellas y enlaces a catálogo/galería.
+// Las calificaciones se persisten en localStorage bajo la clave 'mom_ratings'.
 (function () {
-    // Clave para guardar/leer el carrito desde localStorage
     const STORAGE_KEY = 'carrito_presupuesto';
 
-    // Obtiene el carrito del localStorage
     function obtenerCarrito() {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     }
 
-    // Actualiza el contador del carrito en el header
     function actualizarContador() {
         const span = document.getElementById('contadorCarrito');
         if (span) {
@@ -17,7 +16,6 @@
         }
     }
 
-    // Verifica si un constructor coincide con el texto de búsqueda
     function coincide(constructor, query) {
         const q = query.toLowerCase();
         return (
@@ -29,7 +27,6 @@
         );
     }
 
-    // Renderiza las tarjetas de constructores en el DOM
     function renderizarConstructores(lista) {
         const contenedor = document.getElementById('constructoresLista');
         if (!contenedor) return;
@@ -87,7 +84,6 @@
         initRatingEstrellas();
     }
 
-    // Filtra constructores según el texto de búsqueda y los renderiza
     function filtrarPorQuery(query) {
         if (!query) {
             renderizarConstructores(todosLosConstructores);
@@ -97,7 +93,6 @@
         renderizarConstructores(filtrados);
     }
 
-    // Al cargar el DOM: espera constructores, aplica filtros y renderiza
     document.addEventListener('DOMContentLoaded', async () => {
         try {
             await constructoresReady;
@@ -107,6 +102,7 @@
             const idParam = params.get('id');
 
             if (idParam) {
+                // Modo "vista individual": muestra solo un constructor
                 const c = todosLosConstructores.find(c => c.id == idParam);
                 if (c) {
                     renderizarConstructores([c]);
@@ -132,7 +128,6 @@
         }
     });
 
-    // Obtiene la calificación guardada de un constructor desde localStorage
     function obtenerRatingConstructor(id) {
         try {
             const ratings = JSON.parse(localStorage.getItem('mom_ratings') || '{}');
@@ -140,7 +135,6 @@
         } catch { return 0; }
     }
 
-    // Guarda la calificación de un constructor en localStorage
     function guardarRatingConstructor(id, valor) {
         try {
             const ratings = JSON.parse(localStorage.getItem('mom_ratings') || '{}');
@@ -149,9 +143,11 @@
         } catch {}
     }
 
-    // Inicializa el sistema de calificación por estrellas en cada tarjeta
+    // initRatingEstrellas — Agrega un modal flotante a cada tarjeta para calificar.
+    // Al hacer clic en las estrellas se abre un modal con 5 botones ★.
+    // El color de las estrellas cambia en hover y se fija al hacer clic.
     function initRatingEstrellas() {
-        // Elimina modales anteriores para evitar acumulación en re-render
+        // Elimina modales previos para evitar duplicados al re-renderizar
         document.querySelectorAll('.rating-modal').forEach(m => m.remove());
 
         document.querySelectorAll('.constructor-calificacion').forEach(container => {
@@ -163,6 +159,7 @@
 
             const ratingVal = obtenerRatingConstructor(id);
 
+            // Actualiza la visualización de estrellas y el texto numérico
             function renderStars(valor) {
                 const llenas = '★'.repeat(Math.round(valor));
                 const vacias = '☆'.repeat(5 - Math.round(valor));
@@ -176,32 +173,34 @@
             starsSpan.style.cursor = 'pointer';
             starsSpan.title = 'Haz clic para calificar';
 
+            // Crea el modal de calificación con 5 botones de estrella
             const modal = document.createElement('div');
             modal.className = 'rating-modal';
-            modal.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:3000;justify-content:center;align-items:center;';
             modal.innerHTML = `
-                <div style="background:white;padding:28px;border-radius:16px;text-align:center;min-width:260px;box-shadow:0 10px 30px rgba(0,0,0,0.3);">
-                    <h3 style="color:#c0392b;margin-bottom:16px;font-size:1.1rem;">Califica a este constructor</h3>
-                    <div class="rating-select" style="display:flex;gap:6px;justify-content:center;margin-bottom:16px;">
-                        ${[1,2,3,4,5].map(v => `<button data-val="${v}" style="background:none;border:none;font-size:2.2rem;cursor:pointer;color:${v <= Math.round(ratingVal) ? '#f1c40f' : '#ddd'};transition:color 0.15s;padding:0 3px;">★</button>`).join('')}
+                <div class="rating-modal-box">
+                    <h3 class="rating-modal-title">Califica a este constructor</h3>
+                    <div class="rating-select">
+                        ${[1,2,3,4,5].map(v => `<button data-val="${v}" class="rating-star-btn" style="color:${v <= Math.round(ratingVal) ? '#f1c40f' : '#ddd'};">★</button>`).join('')}
                     </div>
-                    <button class="btn-rating-cerrar" style="background:#c0392b;color:white;border:none;padding:8px 24px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:0.9rem;">Cerrar</button>
+                    <button class="btn-rating-cerrar">Cerrar</button>
                 </div>
             `;
             document.body.appendChild(modal);
 
+            // Abre el modal al hacer clic en las estrellas
             starsSpan.addEventListener('click', function(e) {
                 e.stopPropagation();
-                modal.style.display = 'flex';
+                modal.classList.add('open');
             });
 
+            // Maneja clics y hover en cada botón de estrella
             const selectDiv = modal.querySelector('.rating-select');
             selectDiv.querySelectorAll('button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const val = parseInt(this.dataset.val);
                     guardarRatingConstructor(id, val);
                     renderStars(val);
-                    modal.style.display = 'none';
+                    modal.classList.remove('open');
                     selectDiv.querySelectorAll('button').forEach(b => {
                         b.style.color = parseInt(b.dataset.val) <= val ? '#f1c40f' : '#ddd';
                     });
@@ -214,6 +213,7 @@
                 });
             });
 
+            // Al salir del área de selección, restaura el color según la calificación guardada
             selectDiv.addEventListener('mouseleave', function() {
                 const current = obtenerRatingConstructor(id);
                 selectDiv.querySelectorAll('button').forEach(b => {
@@ -221,12 +221,13 @@
                 });
             });
 
+            // Cierra el modal con el botón "Cerrar" o clic en el fondo
             modal.querySelector('.btn-rating-cerrar').addEventListener('click', function() {
-                modal.style.display = 'none';
+                modal.classList.remove('open');
             });
 
             modal.addEventListener('click', function(e) {
-                if (e.target === modal) modal.style.display = 'none';
+                if (e.target === modal) modal.classList.remove('open');
             });
         });
     }
