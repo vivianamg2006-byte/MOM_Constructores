@@ -11,7 +11,7 @@ function guardarConstructoresUsuario(lista) {
     localStorage.setItem('mom_constructores_usuario', JSON.stringify(lista));
 }
 
-// fetchJSON — Wrapper que fuerza UTF-8 explícito para evitar mojibake en file:// (Windows)
+// fetchJSON — Wrapper que fuerza UTF-8 explícito para evitar mojibake en file
 function fetchJSON(url) {
     return fetch(url)
         .then(function (r) { return r.blob(); })
@@ -79,6 +79,7 @@ function toggleFavorito(id) {
     let favs = obtenerFavoritos();
     const idx = favs.findIndex(f => f.id === id);
     if (idx > -1) {
+        if (!confirm('\u00bfEst\u00e1s seguro de eliminar este constructor de favoritos?')) return;
         favs.splice(idx, 1);
     } else {
         const c = todosLosConstructores.find(c => c.id === id);
@@ -86,6 +87,7 @@ function toggleFavorito(id) {
     }
     guardarFavoritos(favs);
     actualizarBadgeFav();
+    actualizarModalFavoritos();
 
     // Actualiza el estado visual del botón de favorito
     const btn = document.querySelector(`.btn-favorito[data-id="${id}"]`);
@@ -119,7 +121,7 @@ function actualizarModalFavoritos() {
         </div>
     `).join('');
 
-    // Nota: se asigna onclick directamente para simplificar; los botones se crean dinámicamente.
+    // Nota: se asigna onclick directamente para simplificar y los botones se crean dinámicamente.
 }
 
 // Obtiene el carrito de presupuestos desde localStorage

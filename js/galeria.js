@@ -38,7 +38,7 @@
     }
 
     
-    // Semillas precargadas para la galería de cada constructor (evita fetch + encoding issues en file://)
+    // Semillas precargadas para la galería de cada constructor
     var SEMILLAS_GALERIA = {
         "1": [
             { "src": "assets/images/construccion.jpg", "caption": "Construcción de vivienda" },

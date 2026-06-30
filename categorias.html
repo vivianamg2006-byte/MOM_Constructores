@@ -476,6 +476,7 @@
             <p>
                 <a href="index.html">Inicio</a> | 
                 <a href="constructores.html">Constructores</a> | 
+                <a href="tarjeta.html" id="tab-tarjeta-footer" class="hidden">Tarjeta MOM</a> | 
                 <a href="categorias.html">Categorías</a> | 
                 <a href="acerca.html">Acerca de</a>
             </p>
@@ -528,9 +529,13 @@
                     if (_ch) _ch.style.display = 'none';
                     const _tc = document.querySelector('.nav-tabs a[href="carrito.html"]');
                     if (_tc) _tc.parentElement.style.display = 'none';
+                    const _tf = document.getElementById('tab-tarjeta-footer');
+                    if (_tf) { _tf.classList.remove('hidden'); _tf.style.display = 'inline'; }
                 } else {
                     tabTarjeta.classList.add('hidden');
                     tabTarjeta.style.display = 'none';
+                    const _tf = document.getElementById('tab-tarjeta-footer');
+                    if (_tf) { _tf.classList.add('hidden'); _tf.style.display = 'none'; }
                 }
             }
         })();

@@ -15,17 +15,20 @@
             span.textContent = total;
         }
     }
+function normalizar(s) {
+    return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
 
-    function coincide(constructor, query) {
-        const q = query.toLowerCase();
-        return (
-            (constructor.nombre || '').toLowerCase().includes(q) ||
-            (constructor.especialidad || '').toLowerCase().includes(q) ||
-            (constructor.categoria || '').toLowerCase().includes(q) ||
-            (constructor.provincia || '').toLowerCase().includes(q) ||
-            (constructor.descripcion || '').toLowerCase().includes(q)
-        );
-    }
+function coincide(constructor, query) {
+    const q = normalizar(query);
+    return (
+        normalizar(constructor.nombre).includes(q) ||
+        normalizar(constructor.especialidad).includes(q) ||
+        normalizar(constructor.categoria).includes(q) ||
+        normalizar(constructor.provincia).includes(q) ||
+        normalizar(constructor.descripcion).includes(q)
+    );
+}
 
     function renderizarConstructores(lista) {
         const contenedor = document.getElementById('constructoresLista');
@@ -37,6 +40,12 @@
         }
 
         contenedor.innerHTML = '';
+
+        function capitalizar(str) {
+            return str.split(/[_\s]+/).map(function(p) {
+                return p.charAt(0).toUpperCase() + p.slice(1);
+            }).join(' ');
+        }
 
         lista.forEach(c => {
             const categorias = (c.categoria || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -62,7 +71,7 @@
                     <p class="constructor-detalle"><strong>Provincia:</strong> ${c.provincia || ''}</p>
                     <p class="constructor-detalle"><strong>Contacto:</strong> ${c.contacto || ''}</p>
                     <div class="constructor-tags">
-                        ${categorias.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                        ${categorias.map(cat => `<span class="tag">${capitalizar(cat)}</span>`).join('')}
                     </div>
                 </div>
                 <div class="constructor-accion">
@@ -144,8 +153,6 @@
     }
 
     // initRatingEstrellas — Agrega un modal flotante a cada tarjeta para calificar.
-    // Al hacer clic en las estrellas se abre un modal con 5 botones ★.
-    // El color de las estrellas cambia en hover y se fija al hacer clic.
     function initRatingEstrellas() {
         // Elimina modales previos para evitar duplicados al re-renderizar
         document.querySelectorAll('.rating-modal').forEach(m => m.remove());

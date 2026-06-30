@@ -322,6 +322,57 @@
             min-height: 20px;
         }
 
+        .categorias-checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .categoria-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            background: #fafafa;
+            user-select: none;
+        }
+
+        .categoria-checkbox-item:hover {
+            border-color: #c0392b;
+            background: #fff5f5;
+        }
+
+        .categoria-checkbox-item input[type="checkbox"] {
+            accent-color: #c0392b;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .categoria-checkbox-item.seleccionada {
+            border-color: #c0392b;
+            background: #ffebee;
+            font-weight: 600;
+        }
+
+        .categoria-checkbox-item .cat-icono {
+            font-size: 1.1rem;
+        }
+
+        .error-categorias {
+            color: #c0392b;
+            font-size: 0.82rem;
+            margin-top: 4px;
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .tarjeta-form-section,
             .tarjeta-preview-section {
@@ -387,7 +438,7 @@
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="constructores.html">Constructores</a></li>
-                    <li><a href="tarjeta.html" class="active">Tarjeta MOM</a></li>
+                    <li id="tab-tarjeta" class="hidden"><a href="tarjeta.html" class="active">Tarjeta MOM</a></li>
                     <li><a href="categorias.html">Categorías</a></li>
                     <li><a href="carrito.html">Carrito de presupuestos</a></li>
                     <li><a href="acerca.html">Acerca de</a></li>
@@ -458,6 +509,7 @@
             <p>
                 <a href="index.html">Inicio</a> | 
                 <a href="constructores.html">Constructores</a> | 
+                <a href="tarjeta.html" id="tab-tarjeta-footer" class="hidden">Tarjeta MOM</a> | 
                 <a href="categorias.html">Categorías</a> | 
                 <a href="acerca.html">Acerca de</a>
             </p>
@@ -489,6 +541,8 @@
             const profileName = document.getElementById('profileName');
             const profileImg = document.getElementById('profileImg');
             const profileNivel = document.getElementById('profileNivel');
+            const tabTarjeta = document.getElementById('tab-tarjeta');
+            const tabTarjetaFooter = document.getElementById('tab-tarjeta-footer');
 
             if (sesionData) {
                 const sesion = JSON.parse(sesionData);
@@ -509,15 +563,25 @@
                             : 'Estás registrado como Cliente.';
                     openModal('perfilModal');
                 };
+
+                if (sesion.rol === 'constructor') {
+                    if (tabTarjeta) { tabTarjeta.classList.remove('hidden'); tabTarjeta.style.display = 'block'; }
+                    if (tabTarjetaFooter) { tabTarjetaFooter.classList.remove('hidden'); tabTarjetaFooter.style.display = 'inline'; }
+                    const _ch = document.getElementById('btnCarritoHeader');
+                    if (_ch) _ch.style.display = 'none';
+                    const _tc = document.querySelector('.nav-tabs a[href="carrito.html"]');
+                    if (_tc) _tc.parentElement.style.display = 'none';
+                } else {
+                    if (tabTarjeta) { tabTarjeta.classList.add('hidden'); tabTarjeta.style.display = 'none'; }
+                    if (tabTarjetaFooter) { tabTarjetaFooter.classList.add('hidden'); tabTarjetaFooter.style.display = 'none'; }
+                    window.location.href = 'login.html';
+                }
+            } else {
+                if (tabTarjeta) { tabTarjeta.classList.add('hidden'); tabTarjeta.style.display = 'none'; }
+                if (tabTarjetaFooter) { tabTarjetaFooter.classList.add('hidden'); tabTarjetaFooter.style.display = 'none'; }
+                window.location.href = 'login.html';
             }
         })();
-            const _sesT = JSON.parse(localStorage.getItem('mom_sesion') || 'null');
-            if (_sesT && _sesT.rol === 'constructor') {
-                const _ch = document.getElementById('btnCarritoHeader');
-                if (_ch) _ch.style.display = 'none';
-                const _tc = document.querySelector('.nav-tabs a[href="carrito.html"]');
-                if (_tc) _tc.parentElement.style.display = 'none';
-            }
 
         </script>
 <script>
@@ -532,6 +596,14 @@
     }
 
     var fotoDataURL = null;
+    var categoriasDisponibles = [];
+
+    function cargarCategorias() {
+        return fetch('data/presupuestos.json')
+            .then(function(r) { return r.json(); })
+            .then(function(d) { categoriasDisponibles = d.categorias || []; })
+            .catch(function() { categoriasDisponibles = []; });
+    }
 
     function generarId() {
         return 'usr_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
@@ -580,6 +652,16 @@
             input.placeholder = c.placeholder || '';
             if (c.required) input.required = true;
             if (datos && datos[c.id]) input.value = datos[c.id];
+            if (c.id === 'contacto' || c.id === 'whatsapp') {
+                input.maxLength = 9;
+                input.addEventListener('input', function() {
+                    var val = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+                    if (val.length > 4) {
+                        val = val.slice(0, 4) + '-' + val.slice(4);
+                    }
+                    this.value = val;
+                });
+            }
             grupo.appendChild(input);
             form.appendChild(grupo);
         });
@@ -653,6 +735,70 @@
         grupoEstado.appendChild(select);
         form.appendChild(grupoEstado);
 
+        var grupoCats = document.createElement('div');
+        grupoCats.className = 'form-group';
+        var labelCats = document.createElement('label');
+        labelCats.textContent = 'Categor\u00edas de servicios que ofreces (selecciona al menos una)';
+        labelCats.style.marginBottom = '6px';
+        grupoCats.appendChild(labelCats);
+        var gridCats = document.createElement('div');
+        gridCats.className = 'categorias-checkbox-grid';
+        gridCats.id = 'categoriasCheckboxGrid';
+        var catsSeleccionadas = datos && datos.categoria ? datos.categoria.split(',').map(function(s) { return s.trim().toLowerCase(); }) : [];
+        categoriasDisponibles.forEach(function(cat) {
+            var item = document.createElement('label');
+            item.className = 'categoria-checkbox-item';
+            var cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = cat.id;
+            cb.checked = catsSeleccionadas.indexOf(cat.id) >= 0;
+            cb.addEventListener('change', function() {
+                item.classList.toggle('seleccionada', cb.checked);
+            });
+            item.appendChild(cb);
+            var icono = document.createElement('span');
+            icono.className = 'cat-icono';
+            icono.textContent = cat.icono || '';
+            item.appendChild(icono);
+            var nombre = document.createElement('span');
+            nombre.textContent = cat.nombre;
+            item.appendChild(nombre);
+            if (cb.checked) item.classList.add('seleccionada');
+            gridCats.appendChild(item);
+        });
+        grupoCats.appendChild(gridCats);
+        var errorCats = document.createElement('div');
+        errorCats.className = 'error-categorias';
+        errorCats.id = 'errorCategorias';
+        errorCats.textContent = 'Debes seleccionar al menos una categor\u00eda.';
+        grupoCats.appendChild(errorCats);
+        form.appendChild(grupoCats);
+
+        if (datos) {
+            var btnBorrar = document.createElement('button');
+            btnBorrar.type = 'button';
+            btnBorrar.className = 'btn-guardar';
+            btnBorrar.style.cssText = 'background:#e74c3c;margin-top:4px;';
+            btnBorrar.textContent = 'Borrar tarjeta';
+            btnBorrar.addEventListener('click', function() {
+                if (!confirm('\u00bfEst\u00e1s seguro de eliminar tu tarjeta MOM? Esta acci\u00f3n no se puede deshacer.')) return;
+                var lista = cargarConstructoresUsuario();
+                var idx = -1;
+                for (var i = 0; i < lista.length; i++) {
+                    if (lista[i].id === datos.id || lista[i].userId === datos.userId) { idx = i; break; }
+                }
+                if (idx >= 0) {
+                    lista.splice(idx, 1);
+                    guardarConstructoresUsuario(lista);
+                    localStorage.removeItem('mom_galeria_' + datos.id);
+                    localStorage.removeItem('mom_galeria_temp');
+                    mostrarToast('Tarjeta eliminada correctamente.');
+                    setTimeout(function() { location.reload(); }, 1000);
+                }
+            });
+            form.appendChild(btnBorrar);
+        }
+
         var btn = document.createElement('button');
         btn.type = 'submit';
         btn.className = 'btn-guardar';
@@ -670,6 +816,11 @@
             data.estado = document.getElementById('estado').value;
             data.foto = fotoDataURL || (datos ? datos.foto : null) || '';
 
+            var catsSeleccionadas = [];
+            document.querySelectorAll('#categoriasCheckboxGrid input[type="checkbox"]:checked').forEach(function(cb) {
+                catsSeleccionadas.push(cb.value);
+            });
+
             var errores = [];
             if (!data.nombre) errores.push('Nombre completo');
             if (!data.especialidad) errores.push('Especialidad');
@@ -678,9 +829,14 @@
             if (!data.whatsapp) errores.push('WhatsApp');
             if (!data.descripcion) errores.push('Descripción profesional');
             if (!data.foto) errores.push('Foto de perfil');
+            if (catsSeleccionadas.length === 0) errores.push('Categorías');
 
             if (errores.length > 0) {
                 mostrarToast('Faltan campos obligatorios: ' + errores.join(', '), true);
+                if (catsSeleccionadas.length === 0) {
+                    document.getElementById('errorCategorias').style.display = 'block';
+                    document.getElementById('categoriasCheckboxGrid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
                 return;
             }
 
@@ -700,7 +856,7 @@
                 userId: sesion ? sesion.id : 'anon_' + Date.now(),
                 nombre: data.nombre,
                 especialidad: data.especialidad,
-                categoria: data.especialidad,
+                categoria: catsSeleccionadas.join(','),
                 provincia: data.provincia,
                 presupuestoBase: 0,
                 estado: data.estado,
@@ -726,6 +882,7 @@
             localStorage.setItem('mom_galeria_' + id, JSON.stringify(fotosGuardadas));
             localStorage.removeItem('mom_galeria_temp');
 
+            entrada._esActualizacion = idx >= 0;
             mostrarToast('Tarjeta guardada correctamente.');
             renderizarPreview(entrada);
             mostrarExito(entrada);
@@ -746,7 +903,7 @@
         contenedor.innerHTML = '<div class="tarjeta-preview-contenido">' +
             (fotoSrc ? '<img src="' + fotoSrc + '" alt="' + datos.nombre + '" class="tarjeta-preview-avatar">' : '<div class="tarjeta-preview-avatar tarjeta-preview-avatar-placeholder">' + inicial + '</div>') +
             '<div class="tarjeta-preview-nombre">' + (datos.nombre || 'Sin nombre') + '</div>' +
-            '<div class="tarjeta-preview-especialidad">' + (datos.especialidad || '') + '</div>' +
+            '<div class="tarjeta-preview-especialidad">' + (datos.especialidad ? 'Especialidad: ' + datos.especialidad : '') + '</div>' +
             '<div class="tarjeta-preview-provincia">&#128205; ' + (datos.provincia || '') + '</div>' +
             '<div class="tarjeta-preview-contacto">&#128222; ' + (datos.contacto || '') + '</div>' +
             '<div class="tarjeta-preview-desc">' + (datos.descripcion || '') + '</div>' +
@@ -766,14 +923,13 @@
         div.className = 'tarjeta-exito';
         div.innerHTML =
             '<div class="tarjeta-exito-icono">&#10004;&#65039;</div>' +
-            '<h3 class="tarjeta-exito-titulo">Tarjeta creada exitosamente</h3>' +
+            '<h3 class="tarjeta-exito-titulo">Tarjeta ' + (datos._esActualizacion ? 'actualizada' : 'creada') + ' exitosamente</h3>' +
             '<p class="tarjeta-exito-desc">' + datos.nombre + ' ya aparece en la lista de constructores.</p>' +
             '<a href="constructores.html" class="btn-guardar" style="display:inline-block;text-decoration:none;margin-right:10px;">Ver constructores</a>' +
-            '<button id="btnCrearOtra" class="btn-guardar btn-secundario" style="display:inline-block;">Crear otra tarjeta</button>';
+            '<button id="btnActualizarTarjeta" class="btn-guardar btn-secundario" style="display:inline-block;">Actualizar tarjeta</button>';
         contenedor.innerHTML = '';
         contenedor.appendChild(div);
-        document.getElementById('btnCrearOtra').addEventListener('click', function() {
-            localStorage.removeItem('mom_galeria_temp');
+        document.getElementById('btnActualizarTarjeta').addEventListener('click', function() {
             location.reload();
         });
     }
@@ -892,36 +1048,40 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var sesion = obtenerSesion();
-        var datos = null;
-        if (sesion) {
-            var lista = cargarConstructoresUsuario();
-            for (var i = 0; i < lista.length; i++) {
-                if (lista[i].userId === sesion.id) { datos = lista[i]; break; }
+        cargarCategorias().then(function() {
+            var sesion = obtenerSesion();
+            var datos = null;
+            if (sesion) {
+                var lista = cargarConstructoresUsuario();
+                for (var i = 0; i < lista.length; i++) {
+                    if (lista[i].userId === sesion.id) { datos = lista[i]; break; }
+                }
             }
-        }
-        renderizarFormulario(datos);
-        renderizarPreview(datos);
+            renderizarFormulario(datos);
+            renderizarPreview(datos);
 
-        var seccionGaleria = document.getElementById('tarjetaGaleriaSection');
-        if (seccionGaleria) seccionGaleria.style.display = 'block';
-        renderizarGaleriaTemp();
-        configurarGaleriaInput();
+            var seccionGaleria = document.getElementById('tarjetaGaleriaSection');
+            if (seccionGaleria) seccionGaleria.style.display = 'block';
+            renderizarGaleriaTemp();
+            configurarGaleriaInput();
 
-        if (datos) {
-            var galeriaExiste = [];
-            try { galeriaExiste = JSON.parse(localStorage.getItem('mom_galeria_' + datos.id) || '[]'); } catch {}
-            if (galeriaExiste.length === 0 && datos.galeria && datos.galeria.length > 0) {
-                galeriaExiste = datos.galeria;
+            if (datos) {
+                var galeriaExiste = [];
+                try { galeriaExiste = JSON.parse(localStorage.getItem('mom_galeria_' + datos.id) || '[]'); } catch {}
+                if (galeriaExiste.length === 0 && datos.galeria && datos.galeria.length > 0) {
+                    galeriaExiste = datos.galeria;
+                }
+                if (galeriaExiste.length > 0) {
+                    localStorage.setItem('mom_galeria_temp', JSON.stringify(galeriaExiste));
+                    renderizarGaleriaTemp();
+                }
             }
-            if (galeriaExiste.length > 0) {
-                localStorage.setItem('mom_galeria_temp', JSON.stringify(galeriaExiste));
-                renderizarGaleriaTemp();
-            }
-        }
+        });
     });
 })();
 </script>
+
+<script src="js/main.js"></script>
 
 </body>
 </html>

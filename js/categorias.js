@@ -159,7 +159,7 @@
         });
     }
 
-    // Muestra el catálogo de items de una categoría (con controles de cantidad m²/mL)
+    // Muestra el catálogo de items de una categoría
     function mostrarCatalogo(categoriaId) {
         categoriaActiva = categoriaId;
         const cat = datosCompletos.categorias.find(c => c.id === categoriaId);
@@ -180,6 +180,8 @@
             const unidad = obtenerUnidad(item);
             const esPorMetro = !!(item.precio_m2 || item.precio_mL);
 
+            const unidLabel = esPorMetro ? (item.precio_mL ? 'mL' : 'm²') : 'unidad';
+
             const div = document.createElement('div');
             div.className = 'catalogo-item';
             div.innerHTML = `
@@ -190,39 +192,29 @@
                     <h3>${item.nombre}</h3>
                     <p>${item.descripcion}</p>
                     <div class="catalogo-precio">₡${formatear(precio)} ${unidad}</div>
-                    ${esPorMetro ? `
                     <div class="catalogo-controles">
                         <button class="btn-decremento" type="button">−</button>
-                        <input type="number" class="input-metros" value="10" min="1" max="1000" step="1">
+                        <input type="number" class="input-metros" value="1" min="1" max="${esPorMetro ? 1000 : 100}">
                         <button class="btn-incremento" type="button">+</button>
-                        <span class="m2-label">m²</span>
+                        <span class="m2-label">${unidLabel}</span>
                     </div>
                     <button class="btn-agregar">Agregar al presupuesto</button>
-                    ` : `
-                    <div class="catalogo-controles" style="visibility:hidden;height:0;margin:0;overflow:hidden;">
-                        <input type="number" class="input-metros" value="1" min="1" max="100">
-                    </div>
-                    <button class="btn-agregar" data-fijo="1">Agregar al presupuesto</button>
-                    `}
                 </div>
             `;
 
-            if (esPorMetro) {
-                const input = div.querySelector('.input-metros');
-                div.querySelector('.btn-decremento').addEventListener('click', () => {
-                    let v = parseInt(input.value) || 1;
-                    if (v > 1) input.value = v - 1;
-                });
-                div.querySelector('.btn-incremento').addEventListener('click', () => {
-                    let v = parseInt(input.value) || 1;
-                    if (v < 1000) input.value = v + 1;
-                });
-            }
+            const input = div.querySelector('.input-metros');
+            div.querySelector('.btn-decremento').addEventListener('click', () => {
+                let v = parseInt(input.value) || 1;
+                if (v > 1) input.value = v - 1;
+            });
+            div.querySelector('.btn-incremento').addEventListener('click', () => {
+                let v = parseInt(input.value) || 1;
+                const max = esPorMetro ? 1000 : 100;
+                if (v < max) input.value = v + 1;
+            });
 
             div.querySelector('.btn-agregar').addEventListener('click', function () {
-                const cantidad = esPorMetro
-                    ? (parseInt(div.querySelector('.input-metros').value) || 1)
-                    : 1;
+                const cantidad = parseInt(div.querySelector('.input-metros').value) || 1;
                 agregarAlCarrito(item, cantidad, cat.nombre);
             });
 
@@ -240,6 +232,21 @@
     };
 
     function agregarAlCarrito(item, cantidad, categoriaNombre) {
+        const sesion = JSON.parse(localStorage.getItem('mom_sesion') || 'null');
+        if (!sesion) {
+            const toast = document.getElementById('toastConfirmacion');
+            if (toast) {
+                toast.textContent = 'Debes iniciar sesión o registrarte para agregar al presupuesto.';
+                toast.style.background = '#c0392b';
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.style.background = '';
+                }, 3000);
+            }
+            setTimeout(function() { window.location.href = 'login.html'; }, 1200);
+            return;
+        }
         const carrito = obtenerCarrito();
         const constructorId = constructorActivo ? constructorActivo.id : null;
         const constructorNombre = constructorActivo ? constructorActivo.nombre : '';
